@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SR Leather | সহজ অ্যাডমিন প্যানেল</title>
+  <link rel="icon" type="image/jpeg" href="https://i.ibb.co.com/VWPSZgVT/1000244284.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    body {
+      font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
+      background-color: #F7F5F0;
+      color: #1A241E;
+    }
+    .font-serif-luxury {
+      font-family: 'Cormorant Garamond', serif;
+    }
+    /* Easy scroller */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #EFECE6; }
+    ::-webkit-scrollbar-thumb { background: #C49A6C; border-radius: 999px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- ================= TOP HEADER (CLEAN & MINIMAL) ================= -->
+  <header class="bg-[#19231D] text-white border-b-4 border-[#C49A6C] shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-full p-0.5 bg-[#233328] border-2 border-[#C49A6C] shadow-md overflow-hidden shrink-0">
+          <img src="https://i.ibb.co.com/VWPSZgVT/1000244284.jpg" alt="SR Leather Logo" class="w-full h-full object-cover rounded-full" />
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-bold tracking-wide text-[#FAF8F5]">SR LEATHER</h1>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#C49A6C] text-[#19231D]">সহজ কন্ট্রোল</span>
+          </div>
+          <p class="text-[11px] text-[#C49A6C] font-medium hidden sm:block">সহজ অ্যাডমিন ড্যাশবোর্ড (পাসওয়ার্ড ছাড়া সরাসরি অ্যাক্সেস)</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button onclick="switchTab('settings')" class="px-3 py-1.5 rounded-xl bg-[#233328] hover:bg-[#2e4235] text-white text-xs font-bold flex items-center gap-1.5 border border-[#2F4436] transition-colors">
+          <i data-lucide="settings" class="w-4 h-4 text-[#C49A6C]"></i>
+          <span class="hidden sm:inline">ImgBB সেটিংস</span>
+        </button>
+
+        <a href="/" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-[#C49A6C] hover:bg-[#D4AA7C] text-[#19231D] font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-sm transition-transform active:scale-95">
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+          <span>দোকান দেখুন</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= MAIN DASHBOARD BODY ================= -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 md:p-8 space-y-6 pb-28">
+
+    <!-- ============================================================ -->
+    <!-- TAB 0: HOME / DASHBOARD (METRICS, STATS, RECENT ORDERS) -->
+    <!-- ============================================================ -->
+    <section id="view-home" class="tab-view space-y-6">
+      
+      <!-- Welcome Header -->
+      <div class="bg-gradient-to-r from-[#19231D] via-[#233328] to-[#19231D] text-white rounded-3xl p-6 sm:p-8 shadow-md border-2 border-[#C49A6C]/30 relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#C49A6C]/20 text-[#D4AA7C] border border-[#C49A6C]/30 mb-2">
+              <span class="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse"></span>
+              লাইভ স্টোর কন্ট্রোল
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-bold font-serif-luxury tracking-wide text-[#FAF8F5]">
+              SR Leather ড্যাশবোর্ড
+            </h2>
+            <p class="text-xs sm:text-sm text-gray-300 mt-1 max-w-xl">
+              দোকানের সর্বমোট অর্ডার, বিক্রয় ও কাস্টমারদের তথ্য একনজরে দেখুন। কোনো অর্ডার আসলে সরাসরি কল বা হোয়াটসঅ্যাপ করতে পারবেন।
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button onclick="openProductModal()" class="px-4 py-2.5 rounded-xl bg-[#C49A6C] hover:bg-[#D4AA7C] text-[#19231D] font-bold text-xs sm:text-sm flex items-center gap-2 shadow-sm transition-transform active:scale-95">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>+ নতুন প্রোডাক্ট যোগ করুন</span>
+            </button>
+            <button onclick="switchTab('settings')" class="px-4 py-2.5 rounded-xl bg-[#28382E] hover:bg-[#34483b] text-white font-bold text-xs sm:text-sm flex items-center gap-2 border border-[#3e5647]">
+              <i data-lucide="key" class="w-4 h-4 text-[#C49A6C]"></i>
+              <span>ImgBB API কি</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 High-Contrast Senior-Friendly KPI Metric Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+        
+        <!-- Total Revenue -->
+        <div class="bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] rounded-3xl p-4 sm:p-5 shadow-xs transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-bold text-gray-500">মোট বিক্রয় / রেভিনিউ</span>
+            <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+              ৳
+            </div>
+          </div>
+          <div class="text-2xl sm:text-3xl font-black text-[#19231D] mt-2">
+            ৳ <span id="home-stat-revenue">0</span>
+          </div>
+          <p class="text-[11px] text-gray-400 mt-1">সর্বমোট প্রাপ্ত অর্ডার মূল্য</p>
+        </div>
+
+        <!-- Total Orders -->
+        <div class="bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] rounded-3xl p-4 sm:p-5 shadow-xs transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-bold text-gray-500">মোট অর্ডার</span>
+            <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center">
+              <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div class="text-2xl sm:text-3xl font-black text-[#19231D] mt-2">
+            <span id="home-stat-total-orders">0</span> টি
+          </div>
+          <p class="text-[11px] text-gray-400 mt-1">সব কাস্টমার অর্ডার</p>
+        </div>
+
+        <!-- Pending Orders (Highlighted) -->
+        <div class="bg-amber-50/70 border-2 border-amber-300 rounded-3xl p-4 sm:p-5 shadow-xs transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-bold text-amber-900">নতুন অপেক্ষমাণ অর্ডার</span>
+            <div class="w-10 h-10 rounded-2xl bg-amber-200 text-amber-900 flex items-center justify-center">
+              <i data-lucide="clock" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div class="text-2xl sm:text-3xl font-black text-amber-900 mt-2">
+            <span id="home-stat-pending-orders">0</span> টি
+          </div>
+          <p class="text-[11px] text-amber-700 font-semibold mt-1">জরুরি মনোযোগ প্রয়োজন</p>
+        </div>
+
+        <!-- Total Products -->
+        <div class="bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] rounded-3xl p-4 sm:p-5 shadow-xs transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-bold text-gray-500">মোট পণ্য (Products)</span>
+            <div class="w-10 h-10 rounded-2xl bg-stone-100 text-stone-700 flex items-center justify-center">
+              <i data-lucide="package" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div class="text-2xl sm:text-3xl font-black text-[#19231D] mt-2">
+            <span id="home-stat-products">0</span> টি
+          </div>
+          <p class="text-[11px] text-gray-400 mt-1">দোকানের লাইভ ক্যাটালগ</p>
+        </div>
+
+      </div>
+
+      <!-- Recent Orders on Home Screen (Elderly Friendly: Call & WhatsApp directly) -->
+      <div class="bg-white border-2 border-[#ECE8E1] rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+          <div>
+            <h3 class="text-lg sm:text-xl font-bold text-[#19231D] flex items-center gap-2">
+              <i data-lucide="bell" class="w-5 h-5 text-amber-600"></i>
+              <span>সাম্প্রতিক কাস্টমার অর্ডারসমূহ (Recent Orders)</span>
+            </h3>
+            <p class="text-xs text-gray-500 mt-0.5">অর্ডার আসলে এখান থেকেই সরাসরি কাস্টমারকে কল বা মেসেজ দিন।</p>
+          </div>
+          <button onclick="switchTab('orders')" class="px-4 py-2 rounded-xl bg-[#FAF8F5] hover:bg-gray-100 border text-xs sm:text-sm font-bold text-gray-800 flex items-center gap-1.5 shadow-xs">
+            <span>সকল অর্ডার দেখুন</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div id="home-recent-orders-container" class="space-y-3">
+          <div class="p-8 text-center text-gray-400 text-xs">অর্ডার লোড হচ্ছে...</div>
+        </div>
+      </div>
+
+      <!-- Quick Navigation Tiles (Big & Easy to Tap) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <button onclick="switchTab('products')" class="p-4 rounded-2xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all group shadow-xs">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 text-[#8B5E34] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+            <i data-lucide="package" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-sm text-gray-900">পণ্য ম্যানেজমেন্ট</h4>
+          <p class="text-[11px] text-gray-500">এডিট, ডিসকাউন্ট ও ছবি</p>
+        </button>
+
+        <button onclick="switchTab('orders')" class="p-4 rounded-2xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all group shadow-xs">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-sm text-gray-900">অর্ডার ফিল্টার</h4>
+          <p class="text-[11px] text-gray-500">পেন্ডিং, ডেলিভারি ও রসিদ</p>
+        </button>
+
+        <button onclick="switchTab('settings')" class="p-4 rounded-2xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all group shadow-xs">
+          <div class="w-10 h-10 rounded-xl bg-green-50 text-green-700 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+            <i data-lucide="key" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-sm text-gray-900">ImgBB API কি</h4>
+          <p class="text-[11px] text-gray-500">ছবি হোস্টিং সেটিংস</p>
+        </button>
+
+        <button onclick="switchTab('more')" class="p-4 rounded-2xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all group shadow-xs">
+          <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+            <i data-lucide="grid" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-sm text-gray-900">আরও সেটিংস</h4>
+          <p class="text-[11px] text-gray-500">ব্যানার, পোস্টার ও কুপন</p>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 1: CUSTOMER ORDERS (FRIENDLY CARDS & BIG PHONE BUTTONS) -->
+    <!-- ============================================================ -->
+    <section id="view-orders" class="tab-view hidden space-y-6">
+      
+      <!-- Top Order Stats & Filter -->
+      <div class="bg-white border border-[#E5E0D8] rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#19231D]">কাস্টমার অর্ডারসমূহ (Orders)</h2>
+          <p class="text-xs sm:text-sm text-gray-600 mt-0.5">নতুন অর্ডার এলে সরাসরি এখানে দেখা যাবে। এক ক্লিকে কল বা হোয়াটসঅ্যাপে কথা বলতে পারবেন।</p>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="filterOrders('all')" id="btn-filter-all" class="order-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#19231D] text-white shadow-xs">
+            সব অর্ডার (<span id="count-all-orders">0</span>)
+          </button>
+          <button onclick="filterOrders('Pending')" id="btn-filter-Pending" class="order-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-100 text-amber-900 hover:bg-amber-200">
+            🟡 নতুন অপেক্ষমাণ (<span id="count-pending-orders">0</span>)
+          </button>
+          <button onclick="filterOrders('Delivered')" id="btn-filter-Delivered" class="order-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-green-100 text-green-900 hover:bg-green-200">
+            🟢 ডেলিভারি সম্পন্ন (<span id="count-delivered-orders">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <!-- Orders List Container -->
+      <div id="orders-cards-container" class="space-y-4">
+        <div class="p-12 text-center bg-white rounded-2xl border border-dashed border-gray-300 text-gray-500 font-medium">
+          অর্ডার লোড হচ্ছে... দয়া করে একটু অপেক্ষা করুন।
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 2: PRODUCTS (BIG CARDS, DIRECT WEBP IMAGE UPLOAD) -->
+    <!-- ============================================================ -->
+    <section id="view-products" class="tab-view hidden space-y-6">
+      
+      <!-- Top Product Header & Add Button -->
+      <div class="bg-white border border-[#E5E0D8] rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#19231D]">প্রোডাক্ট বা পণ্য তালিকা</h2>
+          <p class="text-xs sm:text-sm text-gray-600 mt-0.5">আপনার দোকানের সকল ব্যাগ, মানিব্যাগ, বেল্ট ও অন্যান্য সামগ্রী পরিচালনা করুন।</p>
+        </div>
+
+        <button onclick="openProductModal()" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#19231D] hover:bg-[#28382E] text-[#FAF8F5] font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-md transition-transform active:scale-95">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-[#C49A6C]"></i>
+          <span>+ নতুন প্রোডাক্ট যোগ করুন</span>
+        </button>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="bg-white border border-[#E5E0D8] rounded-2xl p-3 shadow-xs flex items-center gap-3">
+        <i data-lucide="search" class="w-5 h-5 text-gray-400 ml-2"></i>
+        <input type="text" id="product-search-input" oninput="handleProductSearch()" placeholder="প্রোডাক্টের নাম লিখে খুঁজুন (Search by name)..." class="w-full text-sm font-medium bg-transparent focus:outline-none" />
+      </div>
+
+      <!-- Products Grid -->
+      <div id="products-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="col-span-full p-12 text-center bg-white rounded-2xl border border-dashed border-gray-300 text-gray-500 font-medium">
+          প্রোডাক্ট লোড হচ্ছে...
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 3: CATEGORIES -->
+    <!-- ============================================================ -->
+    <section id="view-categories" class="tab-view hidden space-y-6">
+      <div class="bg-white border border-[#E5E0D8] rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#19231D]">ক্যাটাগরি সাজান (Collections)</h2>
+          <p class="text-xs sm:text-sm text-gray-600 mt-0.5">দোকানের প্রধান ক্যাটাগরিগুলোর ছবি ও নাম পরিবর্তন বা নতুন ক্যাটাগরি তৈরি করুন।</p>
+        </div>
+        <button onclick="openCategoryModal()" class="px-5 py-3 rounded-2xl bg-[#19231D] hover:bg-[#28382E] text-white font-bold text-sm flex items-center gap-2 shadow-sm">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-[#C49A6C]"></i>
+          <span>+ নতুন ক্যাটাগরি তৈরি করুন</span>
+        </button>
+      </div>
+
+      <div id="categories-grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 4: SITE CONTENT & BANNERS (WITH DIRECT WEBP PHOTO UPLOADER) -->
+    <!-- ============================================================ -->
+    <section id="view-content" class="tab-view hidden space-y-6">
+      
+      <div class="bg-white border border-[#E5E0D8] rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#19231D]">ব্যানার, সোশ্যাল মিডিয়া ও সাইট তথ্য</h2>
+          <p class="text-xs sm:text-sm text-gray-600 mt-0.5">সবগুলো ছবির পাশেই আপলোড বাটন আছে। ছবি নির্বাচন করলেই স্বয়ংক্রিয়ভাবে WebP হয়ে আপলোড হবে।</p>
+        </div>
+        <button onclick="saveAllSiteContent()" class="px-6 py-3.5 rounded-2xl bg-[#19231D] hover:bg-[#28382E] text-white font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-md">
+          <i data-lucide="save" class="w-5 h-5 text-[#86EFAC]"></i>
+          <span>💾 সব পরিবর্তন সেভ করুন</span>
+        </button>
+      </div>
+
+      <div class="space-y-6 max-w-4xl">
+
+        <!-- 1. Announcement Bar -->
+        <div class="bg-white border border-[#E5E0D8] rounded-2xl p-6 shadow-xs space-y-4">
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="sc-announcement-enabled" class="w-5 h-5 rounded text-[#19231D] accent-[#19231D]" />
+            <label for="sc-announcement-enabled" class="text-base font-bold text-gray-800 cursor-pointer">
+              📢 ওয়েবসাইটের শীর্ষে নোটিশ বার দেখান (Top Announcement Bar)
+            </label>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">নোটিশের টেক্সট</label>
+            <input type="text" id="sc-announcement-text" class="w-full px-4 py-2.5 text-sm border rounded-xl bg-[#FAF8F5] focus:bg-white" placeholder="যেমন: সমগ্র বাংলাদেশে ফ্রি ডেলিভারি পাচ্ছেন ৩০০০ টাকার অর্ডারে..." />
+          </div>
+        </div>
+
+        <!-- 2. Hero Section (Home Banner) -->
+        <div class="bg-white border border-[#E5E0D8] rounded-2xl p-6 shadow-xs space-y-4">
+          <div class="flex items-center gap-2 border-b border-gray-100 pb-3">
+            <i data-lucide="image" class="w-5 h-5 text-[#C49A6C]"></i>
+            <h3 class="text-lg font-bold text-[#19231D]">১. হোমপেইজের প্রধান হিরো ব্যানার (Hero Banner)</h3>
+          </div>
+
+          <!-- Hero Image Uploader Box -->
+          <div class="p-4 rounded-2xl bg-[#FAF8F5] border border-[#ECE8E1] space-y-3">
+            <label class="block text-xs font-bold text-gray-700">হিরো ব্যানারের ছবি (Hero Image)</label>
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+              <div id="preview-hero-container" class="w-full sm:w-48 h-32 rounded-xl bg-gray-200 overflow-hidden border border-gray-300 flex items-center justify-center shrink-0">
+                <img id="preview-hero-img" src="" alt="Hero Preview" class="w-full h-full object-cover hidden" />
+                <span id="preview-hero-placeholder" class="text-xs text-gray-400">ছবি নেই</span>
+              </div>
+              <div class="flex-1 w-full space-y-2">
+                <input type="file" id="file-hero-upload" accept="image/*" class="hidden" onchange="uploadDirectImage(event, 'sc-hero-image-url', 'preview-hero-img', 'preview-hero-placeholder', 'status-hero-upload')" />
+                <button type="button" onclick="document.getElementById('file-hero-upload').click()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#19231D] hover:bg-[#28382E] text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs">
+                  <i data-lucide="upload-cloud" class="w-4 h-4 text-[#C49A6C]"></i>
+                  <span>📷 মোবাইল বা কম্পিউটার থেকে ছবি আপলোড করুন</span>
+                </button>
+                <p id="status-hero-upload" class="text-xs font-semibold text-gray-500"></p>
+                <input type="text" id="sc-hero-image-url" placeholder="ইমেজ লিংক (অথবা সরাসরি উপরের বাটনে ক্লিক করুন)" class="w-full px-3 py-2 text-xs border rounded-lg bg-white" />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">ছোট ব্যাজ (Badge Text)</label>
+              <input type="text" id="sc-hero-badge" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="New Season 2025" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">বাটন টেক্সট (Button Text)</label>
+              <input type="text" id="sc-hero-button-text" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="Explore Collection" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">ব্যানার বড় টাইটেল (Title)</label>
+            <input type="text" id="sc-hero-title" class="w-full px-3.5 py-2.5 text-sm font-bold border rounded-xl bg-[#FAF8F5]" placeholder="Carry Quality, Carry Confidence." />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">ব্যানার সাব-টাইটেল (Subtitle)</label>
+            <input type="text" id="sc-hero-subtitle" class="w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="Handcrafted luxury leather goods sculpted from genuine full-grain hides." />
+          </div>
+        </div>
+
+        <!-- 3. Craftsmanship Middle Banner -->
+        <div class="bg-white border border-[#E5E0D8] rounded-2xl p-6 shadow-xs space-y-4">
+          <div class="flex items-center gap-2 border-b border-gray-100 pb-3">
+            <i data-lucide="hammer" class="w-5 h-5 text-[#C49A6C]"></i>
+            <h3 class="text-lg font-bold text-[#19231D]">২. কারিগরির ব্যানার (Craftsmanship Banner)</h3>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-[#FAF8F5] border border-[#ECE8E1] space-y-3">
+            <label class="block text-xs font-bold text-gray-700">কারিগরির ব্যানারের ছবি (Image)</label>
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+              <div id="preview-craft-container" class="w-full sm:w-48 h-32 rounded-xl bg-gray-200 overflow-hidden border border-gray-300 flex items-center justify-center shrink-0">
+                <img id="preview-craft-img" src="" alt="Craft Preview" class="w-full h-full object-cover hidden" />
+                <span id="preview-craft-placeholder" class="text-xs text-gray-400">ছবি নেই</span>
+              </div>
+              <div class="flex-1 w-full space-y-2">
+                <input type="file" id="file-craft-upload" accept="image/*" class="hidden" onchange="uploadDirectImage(event, 'sc-craft-image-url', 'preview-craft-img', 'preview-craft-placeholder', 'status-craft-upload')" />
+                <button type="button" onclick="document.getElementById('file-craft-upload').click()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#19231D] hover:bg-[#28382E] text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs">
+                  <i data-lucide="upload-cloud" class="w-4 h-4 text-[#C49A6C]"></i>
+                  <span>📷 ব্যানার ছবি আপলোড করুন</span>
+                </button>
+                <p id="status-craft-upload" class="text-xs font-semibold text-gray-500"></p>
+                <input type="text" id="sc-craft-image-url" placeholder="ইমেজ লিংক" class="w-full px-3 py-2 text-xs border rounded-lg bg-white" />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">ছোট ট্যাগ (Tag)</label>
+              <input type="text" id="sc-craft-tag" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="100% Genuine Cowhide" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">বাটন টেক্সট</label>
+              <input type="text" id="sc-craft-button-text" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="Explore Our Workshop" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">ব্যানার টাইটেল</label>
+            <input type="text" id="sc-craft-title" class="w-full px-3.5 py-2 text-sm font-bold border rounded-xl bg-[#FAF8F5]" placeholder="Crafted for Generations, Not Just Seasons" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">বিবরণ (Description)</label>
+            <textarea id="sc-craft-description" rows="2" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]"></textarea>
+          </div>
+        </div>
+
+        <!-- 4. Social Media & Direct Channels -->
+        <div class="bg-white border border-[#E5E0D8] rounded-2xl p-6 shadow-xs space-y-4">
+          <div class="flex items-center gap-2 border-b border-gray-100 pb-3">
+            <i data-lucide="share-2" class="w-5 h-5 text-[#C49A6C]"></i>
+            <h3 class="text-lg font-bold text-[#19231D]">৩. সোশ্যাল মিডিয়া ও হোয়াটসঅ্যাপ লিংক</h3>
+          </div>
+          <p class="text-xs text-gray-500">এই লিংকগুলো আপনার ওয়েবসাইট হেডার (৩-ডট মেনু), মোবাইল মেনু ও ফুটারের সাথে যুক্ত থাকবে।</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">📘 ফেসবুক পেইজ লিংক (Facebook URL)</label>
+              <input type="url" id="sc-social-facebook" class="w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="https://facebook.com/srleatherbd" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">▶️ ইউটিউব চ্যানেল লিংক (YouTube URL)</label>
+              <input type="url" id="sc-social-youtube" class="w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="https://youtube.com/@srleather" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">📸 ইনস্টাগ্রাম লিংক (Instagram URL)</label>
+              <input type="url" id="sc-social-instagram" class="w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="https://instagram.com/srleather" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">💬 হোয়াটসঅ্যাপ নাম্বার (WhatsApp Number)</label>
+              <input type="text" id="sc-social-whatsapp" class="w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="+8801712345678" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. About Us Page -->
+        <div class="bg-white border border-[#E5E0D8] rounded-2xl p-6 shadow-xs space-y-4">
+          <div class="flex items-center gap-2 border-b border-gray-100 pb-3">
+            <i data-lucide="book-open" class="w-5 h-5 text-[#C49A6C]"></i>
+            <h3 class="text-lg font-bold text-[#19231D]">৪. আমাদের সম্পর্কে পেইজের তথ্য (About Us Page)</h3>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-[#FAF8F5] border border-[#ECE8E1] space-y-3">
+            <label class="block text-xs font-bold text-gray-700">ওয়ার্কশপ বা শোরুমের বড় ছবি (Banner Image)</label>
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+              <div id="preview-about-container" class="w-full sm:w-48 h-32 rounded-xl bg-gray-200 overflow-hidden border border-gray-300 flex items-center justify-center shrink-0">
+                <img id="preview-about-img" src="" alt="About Preview" class="w-full h-full object-cover hidden" />
+                <span id="preview-about-placeholder" class="text-xs text-gray-400">ছবি নেই</span>
+              </div>
+              <div class="flex-1 w-full space-y-2">
+                <input type="file" id="file-about-upload" accept="image/*" class="hidden" onchange="uploadDirectImage(event, 'sc-about-banner-image', 'preview-about-img', 'preview-about-placeholder', 'status-about-upload')" />
+                <button type="button" onclick="document.getElementById('file-about-upload').click()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#19231D] hover:bg-[#28382E] text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs">
+                  <i data-lucide="upload-cloud" class="w-4 h-4 text-[#C49A6C]"></i>
+                  <span>📷 ছবি নির্বাচন ও আপলোড</span>
+                </button>
+                <p id="status-about-upload" class="text-xs font-semibold text-gray-500"></p>
+                <input type="text" id="sc-about-banner-image" placeholder="ইমেজ লিংক" class="w-full px-3 py-2 text-xs border rounded-lg bg-white" />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">পেইজের প্রধান শিরোনাম (Headline)</label>
+              <input type="text" id="sc-about-title" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="The Art of Pure Full-Grain Leather" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">ঐতিহ্য ব্যাজ (Badge)</label>
+              <input type="text" id="sc-about-badge" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="Est. 2021 — Handcrafted in Bangladesh" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">আমাদের লক্ষ্য বা স্লোগান (Subtitle)</label>
+            <input type="text" id="sc-about-subtitle" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">প্রথম অনুচ্ছেদ (Paragraph 1)</label>
+            <textarea id="sc-about-p1" rows="3" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">দ্বিতীয় অনুচ্ছেদ (Paragraph 2)</label>
+            <textarea id="sc-about-p2" rows="3" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]"></textarea>
+          </div>
+        </div>
+
+        <!-- 6. Store Contact & Showroom -->
+        <div class="bg-white border border-[#E5E0D8] rounded-2xl p-6 shadow-xs space-y-4">
+          <div class="flex items-center gap-2 border-b border-gray-100 pb-3">
+            <i data-lucide="phone-call" class="w-5 h-5 text-[#C49A6C]"></i>
+            <h3 class="text-lg font-bold text-[#19231D]">৫. শোরুম ও কাস্টমার কেয়ার হেল্পলাইন</h3>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">কাস্টমার কেয়ার ফোন নাম্বার</label>
+              <input type="text" id="sc-contact-phone" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="+880 1712-345678" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">সাপোর্ট ইমেইল</label>
+              <input type="email" id="sc-contact-email" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="support@srleather.com" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">শোরুম বা ওয়ার্কশপের পূর্ণ ঠিকানা</label>
+            <input type="text" id="sc-contact-address" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="H-42, Road-11, Banani, Dhaka-1213, Bangladesh" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">ব্র্যান্ড স্লোগান (Tagline)</label>
+            <input type="text" id="sc-contact-tagline" class="w-full px-3.5 py-2 text-xs border rounded-xl bg-[#FAF8F5]" placeholder="Carry Quality, Carry Confidence." />
+          </div>
+        </div>
+
+        <div class="text-center pt-4">
+          <button onclick="saveAllSiteContent()" class="w-full sm:w-auto px-10 py-4 rounded-2xl bg-[#19231D] hover:bg-[#28382E] text-white font-bold text-base shadow-xl transition-all">
+            💾 সমস্ত তথ্য সেভ করুন (Save All Site Content)
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 5: COUPONS -->
+    <!-- ============================================================ -->
+    <section id="view-coupons" class="tab-view hidden space-y-6">
+      <div class="bg-white border border-[#E5E0D8] rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#19231D]">ডিসকাউন্ট কুপন কোড</h2>
+          <p class="text-xs sm:text-sm text-gray-600 mt-0.5">কাস্টমারদের জন্য স্পেশাল প্রোমো কোড বা ছাড় তৈরি করুন।</p>
+        </div>
+        <button onclick="openCouponModal()" class="px-5 py-3 rounded-2xl bg-[#19231D] hover:bg-[#28382E] text-white font-bold text-sm flex items-center gap-2 shadow-sm">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-[#C49A6C]"></i>
+          <span>+ নতুন কুপন তৈরি করুন</span>
+        </button>
+      </div>
+
+      <div class="bg-white border border-[#E5E0D8] rounded-2xl overflow-hidden shadow-xs">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead class="bg-[#FAF8F5] text-gray-700 border-b border-[#ECE8E1]">
+            <tr>
+              <th class="p-3.5">কুপন কোড</th>
+              <th class="p-3.5">টাইপ</th>
+              <th class="p-3.5">ছাড়ের পরিমাণ</th>
+              <th class="p-3.5">সর্বনিম্ন অর্ডার</th>
+              <th class="p-3.5">স্ট্যাটাস</th>
+              <th class="p-3.5 text-right">অ্যাকশন</th>
+            </tr>
+          </thead>
+          <tbody id="coupons-table-body" class="divide-y divide-[#ECE8E1]">
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 6: REVIEWS -->
+    <!-- ============================================================ -->
+    <section id="view-reviews" class="tab-view hidden space-y-6">
+      <div class="bg-white border border-[#E5E0D8] rounded-2xl p-4 sm:p-6 shadow-sm flex items-center justify-between">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#19231D]">কাস্টমারদের রিভিউ ও রেটিং</h2>
+          <p class="text-xs sm:text-sm text-gray-600 mt-0.5">প্রোডাক্টের ওপর কাস্টমারদের মূল্যবান মতামত পর্যালোচনা করুন।</p>
+        </div>
+        <button onclick="switchTab('more')" class="px-3 py-1.5 rounded-xl bg-gray-100 text-xs font-bold text-gray-700 hover:bg-gray-200">
+          &larr; আরও মেনুতে ফিরুন
+        </button>
+      </div>
+
+      <div id="reviews-list-container" class="space-y-3">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 7: SETTINGS (IMGBB API KEY & STORE CONFIG) -->
+    <!-- ============================================================ -->
+    <section id="view-settings" class="tab-view hidden space-y-6">
+      
+      <div class="bg-white border border-[#E5E0D8] rounded-2xl p-5 sm:p-6 shadow-sm">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#19231D] flex items-center gap-2">
+          <i data-lucide="settings" class="w-6 h-6 text-[#C49A6C]"></i>
+          <span>অ্যাপ ও অ্যাডমিন সেটিংস (Settings)</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-gray-600 mt-0.5">
+          এখানে ImgBB ছবি আপলোড API কি এবং শোরুমের তথ্য কনফিগার করতে পারবেন।
+        </p>
+      </div>
+
+      <!-- ImgBB API Key Box -->
+      <div class="bg-white border-2 border-[#ECE8E1] rounded-3xl p-6 sm:p-7 shadow-xs space-y-5">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-[#8B5E34] flex items-center justify-center font-bold text-xl shrink-0">
+              🔑
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-[#19231D]">ImgBB API Key (ছবি আপলোড এপিআই)</h3>
+              <p class="text-xs text-gray-500">প্রোডাক্ট, ব্যানার ও ক্যাটাগরির ছবি সরাসরি ক্লাউডে আপলোড করার জন্য এই কি প্রয়োজন।</p>
+            </div>
+          </div>
+          <span id="imgbb-status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 border border-green-200">
+            🟢 বর্তমান কি সক্রিয়
+          </span>
+        </div>
+
+        <div class="space-y-3 max-w-2xl">
+          <label class="block font-bold text-sm text-gray-800">
+            আপনার ImgBB API Key লিখুন:
+          </label>
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+            <input 
+              type="text" 
+              id="input-imgbb-key" 
+              class="flex-1 px-4 py-3 border-2 border-[#ECE8E1] focus:border-[#C49A6C] rounded-2xl font-mono text-sm bg-[#FAF8F5] focus:bg-white transition-colors" 
+              placeholder="যেমন: 4d7c0067ffcc8540b0800fafe1fb0658" 
+            />
+            <button 
+              type="button" 
+              onclick="saveImgbbKey()" 
+              class="px-6 py-3 rounded-2xl bg-[#19231D] hover:bg-[#28382E] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95 shrink-0"
+            >
+              <i data-lucide="save" class="w-4 h-4 text-[#C49A6C]"></i>
+              <span>💾 কি সেভ করুন</span>
+            </button>
+          </div>
+
+          <p id="imgbb-save-feedback" class="text-xs font-semibold text-emerald-700 hidden"></p>
+
+          <!-- Instructions Card -->
+          <div class="bg-[#FAF8F5] border border-[#ECE8E1] rounded-2xl p-4 text-xs text-gray-700 space-y-2 mt-4">
+            <h4 class="font-bold text-[#19231D] flex items-center gap-1.5">
+              <i data-lucide="help-circle" class="w-4 h-4 text-[#8B5E34]"></i>
+              <span>কীভাবে ফ্রিতে আপনার নিজস্ব ImgBB API কি পাবেন?</span>
+            </h4>
+            <ol class="list-decimal list-inside space-y-1 text-gray-600 pl-1">
+              <li>ব্রাউজারে <a href="https://api.imgbb.com" target="_blank" class="text-blue-600 font-bold underline">api.imgbb.com</a> লিংকে যান।</li>
+              <li>একটি ফ্রি একাউন্ট তৈরি করুন অথবা সাইন ইন করুন।</li>
+              <li>সেখানে <strong>'Get API key'</strong> বাটনে ক্লিক করে ৩২ অক্ষরের কি-টি কপি করুন।</li>
+              <li>উপরের বক্সে পেস্ট করে <strong>'💾 কি সেভ করুন'</strong> বাটনে চাপুন। এটি আজীবনের জন্য কাজ করবে!</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Showroom & Address Config with Explanation -->
+      <div class="bg-white border-2 border-[#ECE8E1] rounded-3xl p-6 sm:p-7 shadow-xs space-y-4">
+        <div class="flex items-center gap-3 pb-3 border-b border-gray-100">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
+            <i data-lucide="map-pin" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-[#19231D]">শোরুম লোকেশন প্রদর্শন নীতি (Showroom Visibility)</h3>
+            <p class="text-xs text-gray-500">শোরুম না থাকলে খালি রাখুন, স্বয়ংক্রিয়ভাবে ওয়েবসাইট ও অ্যাপ থেকে শোরুম কার্ড লুকিয়ে যাবে।</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 leading-relaxed">
+          💡 <strong>স্মার্ট হাইডিং নিয়ম:</strong> আপনি যদি নিচে শোরুমের ঠিকানা বা যোগাযোগের তথ্য খালি রাখেন, তবে কাস্টমারদের ওয়েবসাইটে কোনো খালি বক্স বা শোরুমের ঠিকানা দেখানো হবে না।
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-xs text-gray-700 mb-1">শোরুমের ঠিকানা (না থাকলে খালি রাখুন):</label>
+            <input type="text" id="quick-address" class="w-full px-3.5 py-2.5 border rounded-xl bg-[#FAF8F5] text-xs" placeholder="যেমন: ধানমন্ডি, ঢাকা (বা ফাঁকা রাখুন)" />
+          </div>
+          <div>
+            <label class="block font-bold text-xs text-gray-700 mb-1">হোয়াটসঅ্যাপ নাম্বার (কাস্টমার সাপোর্টের জন্য):</label>
+            <input type="text" id="quick-whatsapp" class="w-full px-3.5 py-2.5 border rounded-xl bg-[#FAF8F5] text-xs" placeholder="যেমন: 01700000000" />
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button type="button" onclick="saveQuickSettings()" class="px-5 py-2.5 rounded-xl bg-[#C49A6C] hover:bg-[#D4AA7C] text-[#19231D] font-bold text-xs sm:text-sm flex items-center gap-2 shadow-xs transition-transform active:scale-95">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>তথ্য সংরক্ষণ করুন</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 8: MORE (BANNERS, POSTERS, CATEGORIES, NOTICES) -->
+    <!-- ============================================================ -->
+    <section id="view-more" class="tab-view hidden space-y-6">
+      
+      <div class="bg-white border border-[#E5E0D8] rounded-2xl p-5 sm:p-6 shadow-sm">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#19231D] flex items-center gap-2">
+          <i data-lucide="grid" class="w-6 h-6 text-[#C49A6C]"></i>
+          <span>আরও কনফিগারেশন মেনু (More Menu)</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-gray-600 mt-0.5">
+          ব্যানার, পোস্টার, ক্যাটাগরির ব্যাকগ্রাউন্ড ছবি, কুপন এবং অন্যান্য সেটিংস পরিচালনা করুন।
+        </p>
+      </div>
+
+      <!-- Grid of Sub-sections (Large, Friendly Cards) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <!-- 1. Hero Banner -->
+        <button onclick="switchTab('content'); window.scrollTo({top: 0, behavior: 'smooth'});" class="p-5 rounded-3xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all shadow-xs group">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-[#8B5E34] flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="image" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400 group-hover:text-[#19231D] transition-colors"></i>
+          </div>
+          <h3 class="font-bold text-base text-[#19231D]">হোমপেইজ হিরো ব্যানার</h3>
+          <p class="text-xs text-gray-500 mt-1">দোকানের মূল প্রধান ব্যানার ছবি, শিরোনাম ও বাটন পরিবর্তন করুন।</p>
+        </button>
+
+        <!-- 2. Posters & Artisan Banner -->
+        <button onclick="switchTab('content'); document.getElementById('sc-craft-tag').scrollIntoView({behavior: 'smooth'});" class="p-5 rounded-3xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all shadow-xs group">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="layout" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400 group-hover:text-[#19231D] transition-colors"></i>
+          </div>
+          <h3 class="font-bold text-base text-[#19231D]">পোস্টার ও কারিগর ব্যানার</h3>
+          <p class="text-xs text-gray-500 mt-1">হস্তনির্মিত চামড়ার কারুশিল্প ব্যানার ছবি ও কারিগরির বিবরণ আপলোড করুন।</p>
+        </button>
+
+        <!-- 3. Categories & Background Images -->
+        <button onclick="switchTab('categories')" class="p-5 rounded-3xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all shadow-xs group">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="tags" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400 group-hover:text-[#19231D] transition-colors"></i>
+          </div>
+          <h3 class="font-bold text-base text-[#19231D]">ক্যাটাগরি ও ব্যাকগ্রাউন্ড ইমেজ</h3>
+          <p class="text-xs text-gray-500 mt-1">প্রতিটি ক্যাটাগরির নাম ও কভার ব্যাকগ্রাউন্ড ছবি আপলোড করে সেট করুন।</p>
+        </button>
+
+        <!-- 4. Social Media & Contact -->
+        <button onclick="switchTab('content'); document.getElementById('sc-contact-phone').scrollIntoView({behavior: 'smooth'});" class="p-5 rounded-3xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all shadow-xs group">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="share-2" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400 group-hover:text-[#19231D] transition-colors"></i>
+          </div>
+          <h3 class="font-bold text-base text-[#19231D]">সোশ্যাল মিডিয়া ও কন্টাক্ট লিংক</h3>
+          <p class="text-xs text-gray-500 mt-1">ফেসবুক, ইউটিউব, ইনস্টাগ্রাম, হোয়াটসঅ্যাপ ও কাস্টমার কেয়ার ফোন।</p>
+        </button>
+
+        <!-- 5. Announcement Bar -->
+        <button onclick="switchTab('content'); document.getElementById('sc-announcement-text').scrollIntoView({behavior: 'smooth'});" class="p-5 rounded-3xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all shadow-xs group">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="megaphone" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400 group-hover:text-[#19231D] transition-colors"></i>
+          </div>
+          <h3 class="font-bold text-base text-[#19231D]">টপ নোটিশ / অ্যানাউন্সমেন্ট</h3>
+          <p class="text-xs text-gray-500 mt-1">ওয়েবসাইটের সবচেয়ে উপরে নোটিশ চালু বা বন্ধ করুন।</p>
+        </button>
+
+        <!-- 6. Discount Coupons -->
+        <button onclick="switchTab('coupons')" class="p-5 rounded-3xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all shadow-xs group">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-12 h-12 rounded-2xl bg-pink-50 text-pink-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="ticket" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400 group-hover:text-[#19231D] transition-colors"></i>
+          </div>
+          <h3 class="font-bold text-base text-[#19231D]">ডিসকাউন্ট কুপন কোড</h3>
+          <p class="text-xs text-gray-500 mt-1">ক্রেতাদের জন্য প্রোমোকোড তৈরি ও পার্সেন্টেজ ছাড় নির্ধারণ করুন।</p>
+        </button>
+
+        <!-- 7. Customer Reviews -->
+        <button onclick="switchTab('reviews')" class="p-5 rounded-3xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all shadow-xs group">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-12 h-12 rounded-2xl bg-yellow-50 text-yellow-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="star" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400 group-hover:text-[#19231D] transition-colors"></i>
+          </div>
+          <h3 class="font-bold text-base text-[#19231D]">কাস্টমার রিভিউ</h3>
+          <p class="text-xs text-gray-500 mt-1">পণ্য সম্পর্কে গ্রাহকদের রেটিং ও রিভিউ পর্যবেক্ষণ করুন।</p>
+        </button>
+
+        <!-- 8. ImgBB API Settings -->
+        <button onclick="switchTab('settings')" class="p-5 rounded-3xl bg-white border-2 border-[#ECE8E1] hover:border-[#C49A6C] text-left transition-all shadow-xs group">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="key" class="w-6 h-6"></i>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400 group-hover:text-[#19231D] transition-colors"></i>
+          </div>
+          <h3 class="font-bold text-base text-[#19231D]">ImgBB API সেটিংস</h3>
+          <p class="text-xs text-gray-500 mt-1">ফ্রি ছবি হোস্টিং এপিআই কি পরিবর্তন বা সংরক্ষণ করুন।</p>
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= FIXED BOTTOM NAVIGATION BAR (SENIOR FRIENDLY & CLEAN) ================= -->
+  <nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#19231D]/95 backdrop-blur-md border-t-2 border-[#C49A6C] shadow-2xl py-2 px-3">
+    <div class="max-w-md sm:max-w-lg mx-auto flex items-center justify-around">
+      
+      <!-- 1. Home -->
+      <button onclick="switchTab('home')" id="bottom-tab-home" class="bottom-nav-btn flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition-all text-[#C49A6C]">
+        <div class="p-1 rounded-xl bg-[#C49A6C]/20 text-[#C49A6C]">
+          <i data-lucide="home" class="w-5 h-5"></i>
+        </div>
+        <span class="text-[11px] font-bold">হোম</span>
+      </button>
+
+      <!-- 2. Products -->
+      <button onclick="switchTab('products')" id="bottom-tab-products" class="bottom-nav-btn flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition-all text-gray-400 hover:text-white">
+        <div class="p-1 rounded-xl">
+          <i data-lucide="package" class="w-5 h-5"></i>
+        </div>
+        <span class="text-[11px] font-bold">পণ্য</span>
+      </button>
+
+      <!-- 3. Orders -->
+      <button onclick="switchTab('orders')" id="bottom-tab-orders" class="bottom-nav-btn relative flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition-all text-gray-400 hover:text-white">
+        <div class="p-1 rounded-xl relative">
+          <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          <span id="badge-bottom-orders" class="absolute -top-1.5 -right-2 px-1.5 py-0.5 rounded-full text-[10px] font-black bg-red-500 text-white hidden">0</span>
+        </div>
+        <span class="text-[11px] font-bold">অর্ডার</span>
+      </button>
+
+      <!-- 4. Settings -->
+      <button onclick="switchTab('settings')" id="bottom-tab-settings" class="bottom-nav-btn flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition-all text-gray-400 hover:text-white">
+        <div class="p-1 rounded-xl">
+          <i data-lucide="settings" class="w-5 h-5"></i>
+        </div>
+        <span class="text-[11px] font-bold">সেটিংস</span>
+      </button>
+
+      <!-- 5. More -->
+      <button onclick="switchTab('more')" id="bottom-tab-more" class="bottom-nav-btn flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition-all text-gray-400 hover:text-white">
+        <div class="p-1 rounded-xl">
+          <i data-lucide="grid" class="w-5 h-5"></i>
+        </div>
+        <span class="text-[11px] font-bold">আরও</span>
+      </button>
+
+    </div>
+  </nav>
+
+
+  <!-- ============================================================ -->
+  <!-- MODAL: PRODUCT ADD / EDIT (WITH DIRECT WEBP PHOTO UPLOADER) -->
+  <!-- ============================================================ -->
+  <div id="product-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white border border-[#ECE8E1] rounded-3xl w-full max-w-2xl max-h-[92vh] overflow-y-auto p-5 sm:p-7 space-y-5 shadow-2xl">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-[#ECE8E1]">
+        <div>
+          <h3 id="product-modal-title" class="text-xl font-bold text-[#19231D]">নতুন প্রোডাক্ট যোগ করুন</h3>
+          <p class="text-xs text-gray-500">প্রোডাক্টের নাম, দাম এবং ছবি নির্বাচন করুন।</p>
+        </div>
+        <button onclick="closeProductModal()" class="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-lg">&times;</button>
+      </div>
+
+      <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4 text-xs sm:text-sm">
+        <input type="hidden" id="prod-id" />
+
+        <!-- 1. Name & Category -->
+        <div class="space-y-1">
+          <label class="block font-bold text-gray-800">প্রোডাক্টের নাম (Product Name) *</label>
+          <input type="text" id="prod-name" required class="w-full px-3.5 py-2.5 border rounded-xl bg-[#FAF8F5] focus:bg-white text-sm" placeholder="যেমন: Vintage Bifold Pure Cowhide Leather Wallet" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-gray-800 mb-1">ক্যাটাগরি (Category) *</label>
+            <select id="prod-category" required class="w-full px-3.5 py-2.5 border rounded-xl bg-[#FAF8F5] text-sm">
+              <option value="wallets">Wallets (মানিব্যাগ)</option>
+              <option value="belts">Belts (বেল্ট)</option>
+              <option value="bags">Bags (লেদার ব্যাগ)</option>
+              <option value="backpacks">Backpacks (ব্যাকপ্যাক)</option>
+              <option value="laptop-bags">Laptop Bags (ল্যাপটপ ব্যাগ)</option>
+              <option value="sling-bags">Sling Bags (স্লিং ব্যাগ)</option>
+              <option value="card-holders">Card Holders (কার্ড হোল্ডার)</option>
+              <option value="keychains">Keychains (কি-চেইন)</option>
+              <option value="sunglasses">Sunglasses (সানগ্লাস)</option>
+              <option value="gift-sets">Gift Sets (গিফট সেট)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-gray-800 mb-1">স্টক সংখ্যা (Stock Quantity)</label>
+            <input type="number" id="prod-stock" value="25" min="0" class="w-full px-3.5 py-2.5 border rounded-xl bg-[#FAF8F5] text-sm" />
+          </div>
+        </div>
+
+        <!-- 2. Pricing & Auto Discount Calculation -->
+        <div class="space-y-2 bg-[#FAF8F5] p-3.5 rounded-2xl border border-[#ECE8E1]">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-700">মূল্য ও ছাড়ের হিসাব (Auto Calculation)</span>
+            <span class="text-[10px] text-amber-800 bg-amber-100 font-semibold px-2 py-0.5 rounded-md">
+              💡 ছাড় % দিলে দাম অটোমেটিক বের হবে
+            </span>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">পূর্বের মূল্য (৳)</label>
+              <input type="number" id="prod-oldprice" oninput="calculateDiscount('oldprice')" class="w-full px-3 py-2 border rounded-xl bg-white text-sm" placeholder="1590" />
+            </div>
+            <div>
+              <label class="block font-bold text-amber-800 mb-1">ছাড় % (Discount)</label>
+              <input type="number" id="prod-discount" oninput="calculateDiscount('discount')" class="w-full px-3 py-2 border rounded-xl bg-white text-sm font-bold text-amber-900" placeholder="20" />
+            </div>
+            <div>
+              <label class="block font-bold text-green-900 mb-1">বিক্রয় মূল্য (৳) *</label>
+              <input type="number" id="prod-price" required oninput="calculateDiscount('price')" class="w-full px-3 py-2 border-2 border-green-600 focus:border-green-700 rounded-xl bg-green-50/50 text-sm font-black text-green-900" placeholder="1272" />
+            </div>
+          </div>
+          <div id="price-calc-helper" class="text-[11px] text-gray-500 font-medium px-1">
+            পূর্বের মূল্য ও ছাড়ের শতকরা হার লিখলে বিক্রয় মূল্য স্বয়ংক্রিয়ভাবে বসে যাবে।
+          </div>
+        </div>
+
+        <!-- 3. DIRECT WEBP IMAGE UPLOADER (HEART OF THE FEATURE) -->
+        <div class="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/60 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-gray-800 flex items-center gap-1.5">
+              <i data-lucide="camera" class="w-4 h-4 text-[#C49A6C]"></i>
+              <span>প্রোডাক্টের ছবি আপলোড (WebP Format)</span>
+            </span>
+            <span class="text-[11px] font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">স্বয়ংক্রিয় WebP কনভার্ট</span>
+          </div>
+
+          <!-- Direct File Upload Button -->
+          <div class="flex flex-col sm:flex-row items-center gap-4">
+            <div id="preview-prod-main-container" class="w-24 h-24 rounded-2xl bg-white overflow-hidden border-2 border-dashed border-amber-300 flex items-center justify-center shrink-0 shadow-xs">
+              <img id="preview-prod-main-img" src="" alt="Preview" class="w-full h-full object-cover hidden" />
+              <i id="preview-prod-main-icon" data-lucide="image" class="w-8 h-8 text-amber-300"></i>
+            </div>
+
+            <div class="flex-1 w-full space-y-1.5">
+              <input type="file" id="file-prod-main-upload" accept="image/*" class="hidden" onchange="uploadProductMainImage(event)" />
+              
+              <button type="button" onclick="document.getElementById('file-prod-main-upload').click()" class="w-full py-3 px-4 rounded-xl bg-[#19231D] hover:bg-[#28382E] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs transition-transform active:scale-95">
+                <i data-lucide="upload-cloud" class="w-4 h-4 text-[#C49A6C]"></i>
+                <span>মোবাইল বা পিসি থেকে ছবি নির্বাচন করুন</span>
+              </button>
+              
+              <p id="status-prod-main-upload" class="text-xs font-medium text-gray-500">
+                ছবি নির্বাচন করলেই কোনো কোয়ালিটি লস ছাড়া স্বয়ংক্রিয়ভাবে WebP হয়ে যাবে।
+              </p>
+            </div>
+          </div>
+
+          <!-- Hidden input storing image list (and optional manual edit) -->
+          <div class="pt-2 border-t border-amber-100">
+            <details class="text-xs text-gray-600">
+              <summary class="cursor-pointer font-semibold text-gray-500 hover:text-gray-800">অথবা ছবির লিংক দেখুন বা পরিবর্তন করুন</summary>
+              <textarea id="prod-images" rows="2" class="w-full mt-2 p-2.5 border rounded-xl bg-white font-mono text-xs" placeholder="https://..."></textarea>
+            </details>
+          </div>
+        </div>
+
+        <!-- 4. Colors & Description -->
+        <div>
+          <label class="block font-bold text-gray-800 mb-1">কালার ভ্যারিয়েন্ট (কমা দিয়ে লিখুন)</label>
+          <input type="text" id="prod-colors" class="w-full px-3.5 py-2 border rounded-xl bg-[#FAF8F5] text-sm" placeholder="Brown, Black, Vintage Tan" />
+        </div>
+
+        <div>
+          <label class="block font-bold text-gray-800 mb-1">প্রোডাক্টের বিবরণ (Description)</label>
+          <textarea id="prod-description" rows="3" class="w-full px-3.5 py-2 border rounded-xl bg-[#FAF8F5] text-sm" placeholder="১০০% প্রিমিয়াম চামড়া দিয়ে হস্তনির্মিত..."></textarea>
+        </div>
+
+        <!-- 5. Toggles -->
+        <div class="flex items-center gap-6 pt-1">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="prod-featured" class="w-4 h-4 rounded text-[#19231D] accent-[#19231D]" />
+            <span class="font-bold text-gray-700">হোমপেইজে ফিচার করুন (Featured)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="prod-published" checked class="w-4 h-4 rounded text-[#19231D] accent-[#19231D]" />
+            <span class="font-bold text-gray-700">দোকানে লাইভ রাখুন (Live)</span>
+          </label>
+        </div>
+
+        <!-- Save Button -->
+        <div class="pt-3 border-t border-[#ECE8E1] flex gap-3">
+          <button type="button" onclick="closeProductModal()" class="flex-1 py-3 rounded-2xl bg-gray-100 hover:bg-gray-200 font-bold text-gray-700">
+            বাতিল
+          </button>
+          <button type="submit" id="btn-save-prod" class="flex-1 py-3 rounded-2xl bg-[#19231D] hover:bg-[#28382E] text-white font-bold shadow-md">
+            💾 প্রোডাক্ট সেভ করুন
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- MODAL: CATEGORY ADD / EDIT (WITH DIRECT WEBP PHOTO UPLOADER) -->
+  <!-- ============================================================ -->
+  <div id="category-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-[#ECE8E1] rounded-3xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-[#ECE8E1]">
+        <h3 id="cat-modal-title" class="text-xl font-bold text-[#19231D]">ক্যাটাগরি তৈরি / এডিট</h3>
+        <button onclick="closeCategoryModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold">&times;</button>
+      </div>
+
+      <form id="category-form" onsubmit="saveCategory(event)" class="space-y-3.5 text-xs sm:text-sm">
+        <input type="hidden" id="cat-id" />
+        <div>
+          <label class="block font-bold text-gray-800 mb-1">ক্যাটাগরির নাম *</label>
+          <input type="text" id="cat-name" required class="w-full px-3.5 py-2 border rounded-xl bg-[#FAF8F5]" placeholder="যেমন: Wallets" />
+        </div>
+        <div>
+          <label class="block font-bold text-gray-800 mb-1">স্ল্যাগ (Slug, যেমন: wallets) *</label>
+          <input type="text" id="cat-slug" required class="w-full px-3.5 py-2 border rounded-xl bg-[#FAF8F5]" placeholder="wallets" />
+        </div>
+
+        <!-- Category Cover Photo Uploader -->
+        <div class="p-3.5 rounded-2xl bg-gray-50 border border-gray-200 space-y-2">
+          <label class="block font-bold text-gray-800">ক্যাটাগরির কভার ছবি (Cover Photo)</label>
+          <div class="flex items-center gap-3">
+            <div id="preview-cat-container" class="w-16 h-16 rounded-xl bg-white overflow-hidden border flex items-center justify-center shrink-0">
+              <img id="preview-cat-img" src="" class="w-full h-full object-cover hidden" />
+              <i data-lucide="image" class="w-6 h-6 text-gray-300"></i>
+            </div>
+            <div class="flex-1">
+              <input type="file" id="file-cat-upload" accept="image/*" class="hidden" onchange="uploadDirectImage(event, 'cat-image', 'preview-cat-img', null, 'status-cat-upload')" />
+              <button type="button" onclick="document.getElementById('file-cat-upload').click()" class="px-4 py-2 bg-[#19231D] text-white rounded-xl text-xs font-bold flex items-center gap-1.5">
+                <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-[#C49A6C]"></i>
+                <span>ছবি আপলোড করুন</span>
+              </button>
+              <p id="status-cat-upload" class="text-[11px] text-gray-500 mt-1"></p>
+            </div>
+          </div>
+          <input type="text" id="cat-image" placeholder="ইমেজ লিংক" class="w-full px-3 py-1.5 text-xs border rounded-lg bg-white" />
+        </div>
+
+        <div>
+          <label class="block font-bold text-gray-800 mb-1">ছোট বিবরণ</label>
+          <input type="text" id="cat-desc" class="w-full px-3.5 py-2 border rounded-xl bg-[#FAF8F5]" placeholder="Handcrafted full-grain leather wallets" />
+        </div>
+
+        <div class="pt-3 border-t border-[#ECE8E1] flex gap-3">
+          <button type="button" onclick="closeCategoryModal()" class="flex-1 py-2.5 rounded-xl bg-gray-100 font-bold">বাতিল</button>
+          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-[#19231D] text-white font-bold">💾 সংরক্ষণ করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- MODAL: COUPON ADD / EDIT -->
+  <!-- ============================================================ -->
+  <div id="coupon-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-[#ECE8E1] rounded-3xl w-full max-w-md p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-[#ECE8E1]">
+        <h3 class="text-xl font-bold text-[#19231D]">নতুন কুপন কোড</h3>
+        <button onclick="closeCouponModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold">&times;</button>
+      </div>
+
+      <form id="coupon-form" onsubmit="saveCoupon(event)" class="space-y-3.5 text-xs sm:text-sm">
+        <div>
+          <label class="block font-bold text-gray-800 mb-1">কুপন কোড (Coupon Code) *</label>
+          <input type="text" id="coup-code" required class="w-full px-3.5 py-2 border rounded-xl bg-[#FAF8F5] uppercase font-mono font-bold" placeholder="EID2025" />
+        </div>
+        <div>
+          <label class="block font-bold text-gray-800 mb-1">ছাড়ের ধরন (Discount Type)</label>
+          <select id="coup-type" class="w-full px-3.5 py-2 border rounded-xl bg-[#FAF8F5]">
+            <option value="percentage">শতকরা ছাড় (% Percent)</option>
+            <option value="fixed">নির্দিষ্ট টাকা (Fixed Taka ৳)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-gray-800 mb-1">ছাড়ের পরিমাণ (Value) *</label>
+          <input type="number" id="coup-value" required class="w-full px-3.5 py-2 border rounded-xl bg-[#FAF8F5]" placeholder="15" />
+        </div>
+        <div>
+          <label class="block font-bold text-gray-800 mb-1">সর্বনিম্ন অর্ডার টাকা (Minimum Order ৳)</label>
+          <input type="number" id="coup-min" value="1000" class="w-full px-3.5 py-2 border rounded-xl bg-[#FAF8F5]" placeholder="1000" />
+        </div>
+        <div class="pt-3 border-t border-[#ECE8E1] flex gap-3">
+          <button type="button" onclick="closeCouponModal()" class="flex-1 py-2.5 rounded-xl bg-gray-100 font-bold">বাতিল</button>
+          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-[#19231D] text-white font-bold">💾 কুপন তৈরি করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- MODAL: ORDER DETAILS INSPECTION -->
+  <!-- ============================================================ -->
+  <div id="order-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-[#ECE8E1] rounded-3xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-[#ECE8E1]">
+        <div>
+          <span class="text-xs font-semibold text-gray-400 uppercase">Order Details</span>
+          <h3 id="modal-order-id" class="font-mono text-lg font-bold text-[#19231D]"></h3>
+        </div>
+        <button onclick="closeOrderModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold">&times;</button>
+      </div>
+      <div id="order-modal-content" class="space-y-4 text-xs sm:text-sm"></div>
+    </div>
+  </div>
+
+
+  <!-- ================= JAVASCRIPT & REAL-TIME FIRESTORE ENGINE ================= -->
+  <script>
+    // Embedded ImgBB API Key (Direct free hosting, load from localStorage or default)
+    let imgbbApiKey = localStorage.getItem('sr_leather_imgbb_key') || '4d7c0067ffcc8540b0800fafe1fb0658';
+
+    // Firebase Initialization
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-mockApiKey-ForPreviewOnly",
+      authDomain: "fc74d05c-b57e-4e9e-af97-c6fdd6139f3e.firebaseapp.com",
+      projectId: "fc74d05c-b57e-4e9e-af97-c6fdd6139f3e",
+      storageBucket: "fc74d05c-b57e-4e9e-af97-c6fdd6139f3e.appspot.com",
+      messagingSenderId: "304218034611",
+      appId: "1:304218034611:web:mockAppId"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+
+    // Data lists in memory
+    let ordersList = [];
+    let productsList = [];
+    let categoriesList = [];
+    let couponsList = [];
+    let reviewsList = [];
+    let currentOrderFilter = 'all';
+
+    // -------------------------------------------------------------
+    // WEBP CLIENT-SIDE CONVERTER & DIRECT IMGBB UPLOAD ENGINE
+    // -------------------------------------------------------------
+    function convertImageToWebP(file, quality = 0.92) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            try {
+              const canvas = document.createElement('canvas');
+              canvas.width = img.naturalWidth;
+              canvas.height = img.naturalHeight;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0);
+              canvas.toBlob((blob) => {
+                if (blob) {
+                  const baseName = file.name.replace(/\.[^/.]+$/, "");
+                  const webpFile = new File([blob], `${baseName}.webp`, { type: 'image/webp' });
+                  resolve({ webpFile, previewUrl: URL.createObjectURL(blob) });
+                } else {
+                  resolve({ webpFile: file, previewUrl: e.target.result });
+                }
+              }, 'image/webp', quality);
+            } catch (err) {
+              resolve({ webpFile: file, previewUrl: e.target.result });
+            }
+          };
+          img.onerror = () => reject(new Error('ইমেজ লোড করতে সমস্যা হয়েছে'));
+          img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error('ফাইল রিড করা যায়নি'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadWebPToImgbb(file) {
+      const { webpFile, previewUrl } = await convertImageToWebP(file);
+      const formData = new FormData();
+      formData.append('image', webpFile);
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data && data.success) {
+        return {
+          url: data.data.display_url || data.data.url,
+          previewUrl
+        };
+      } else {
+        throw new Error((data && data.error && data.error.message) || 'আপলোড ব্যর্থ হয়েছে');
+      }
+    }
+
+    // Generic direct uploader for single inputs (Hero, Craft, About, Category)
+    async function uploadDirectImage(event, targetInputId, previewImgId, placeholderId, statusId) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) statusEl.innerText = '⏳ WebP ফরম্যাটে কনভার্ট ও আপলোড হচ্ছে...';
+
+      try {
+        const result = await uploadWebPToImgbb(file);
+        document.getElementById(targetInputId).value = result.url;
+        
+        if (previewImgId) {
+          const imgEl = document.getElementById(previewImgId);
+          imgEl.src = result.url;
+          imgEl.classList.remove('hidden');
+        }
+        if (placeholderId) {
+          const phEl = document.getElementById(placeholderId);
+          if (phEl) phEl.classList.add('hidden');
+        }
+        if (statusEl) statusEl.innerText = '✅ WebP ছবি সফলভাবে আপলোড হয়েছে!';
+      } catch (err) {
+        if (statusEl) statusEl.innerText = '❌ আপলোড সমস্যা: ' + err.message;
+      }
+    }
+
+    // Specific product main image uploader
+    async function uploadProductMainImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById('status-prod-main-upload');
+      statusEl.innerText = '⏳ WebP ফরম্যাটে রূপান্তর ও আপলোড হচ্ছে...';
+
+      try {
+        const result = await uploadWebPToImgbb(file);
+        
+        // Show preview
+        const imgEl = document.getElementById('preview-prod-main-img');
+        imgEl.src = result.url;
+        imgEl.classList.remove('hidden');
+        const iconEl = document.getElementById('preview-prod-main-icon');
+        if (iconEl) iconEl.classList.add('hidden');
+
+        // Set into textarea
+        const currentUrls = document.getElementById('prod-images').value.trim();
+        if (!currentUrls) {
+          document.getElementById('prod-images').value = result.url;
+        } else {
+          document.getElementById('prod-images').value = result.url + '\n' + currentUrls;
+        }
+
+        statusEl.innerText = '✅ প্রধান ছবি WebP ফরম্যাটে যুক্ত করা হয়েছে!';
+      } catch (err) {
+        statusEl.innerText = '❌ আপলোড ব্যর্থ: ' + err.message;
+      }
+    }
+
+    // -------------------------------------------------------------
+    // TABS SWITCHING (TOP BUTTONS + FIXED BOTTOM NAVIGATION)
+    // -------------------------------------------------------------
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+      
+      // Top header buttons (if any)
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        btn.classList.remove('bg-[#C49A6C]', 'text-[#19231D]', 'shadow-md');
+        btn.classList.add('text-gray-300');
+      });
+
+      // Bottom navigation buttons
+      document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+        btn.classList.remove('text-[#C49A6C]');
+        btn.classList.add('text-gray-400');
+        const iconContainer = btn.querySelector('div');
+        if (iconContainer) {
+          iconContainer.classList.remove('bg-[#C49A6C]/20', 'text-[#C49A6C]');
+        }
+      });
+
+      const activeView = document.getElementById('view-' + tabId);
+      if (activeView) activeView.classList.remove('hidden');
+
+      const activeTopBtn = document.getElementById('tab-btn-' + tabId);
+      if (activeTopBtn) {
+        activeTopBtn.classList.add('bg-[#C49A6C]', 'text-[#19231D]', 'shadow-md');
+        activeTopBtn.classList.remove('text-gray-300');
+      }
+
+      const activeBottomBtn = document.getElementById('bottom-tab-' + tabId);
+      if (activeBottomBtn) {
+        activeBottomBtn.classList.add('text-[#C49A6C]');
+        activeBottomBtn.classList.remove('text-gray-400');
+        const iconContainer = activeBottomBtn.querySelector('div');
+        if (iconContainer) {
+          iconContainer.classList.add('bg-[#C49A6C]/20', 'text-[#C49A6C]');
+        }
+      }
+
+      if (tabId === 'home') {
+        updateDashboardStats();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    // -------------------------------------------------------------
+    // IMGBB API KEY & SETTINGS
+    // -------------------------------------------------------------
+    function saveImgbbKey() {
+      const input = document.getElementById('input-imgbb-key');
+      const val = input.value.trim();
+      if (!val) {
+        alert('দয়া করে আপনার ImgBB API Key টি লিখুন।');
+        return;
+      }
+      imgbbApiKey = val;
+      localStorage.setItem('sr_leather_imgbb_key', val);
+
+      // Save to Firestore site_content so it's persisted everywhere
+      db.collection('site_content').doc('main').set({
+        imgbbApiKey: val
+      }, { merge: true }).catch(console.warn);
+
+      const feedback = document.getElementById('imgbb-save-feedback');
+      if (feedback) {
+        feedback.innerText = '✅ API Key সফলভাবে সংরক্ষিত হয়েছে!';
+        feedback.classList.remove('hidden');
+        setTimeout(() => feedback.classList.add('hidden'), 4000);
+      }
+      const badge = document.getElementById('imgbb-status-badge');
+      if (badge) {
+        badge.innerText = '🟢 বর্তমান কি সক্রিয় (' + val.slice(0, 6) + '...)';
+      }
+    }
+
+    async function saveQuickSettings() {
+      const address = document.getElementById('quick-address').value.trim();
+      const whatsapp = document.getElementById('quick-whatsapp').value.trim();
+
+      const scAddr = document.getElementById('sc-contact-address');
+      if (scAddr) scAddr.value = address;
+      const scWa = document.getElementById('sc-social-whatsapp');
+      if (scWa) scWa.value = whatsapp;
+
+      try {
+        await db.collection('site_content').doc('main').set({
+          footer: {
+            address: address,
+            whatsappNumber: whatsapp
+          }
+        }, { merge: true });
+        alert('✅ যোগাযোগের তথ্য ও শোরুম সেটিংস সফলভাবে সেভ হয়েছে!');
+      } catch (err) {
+        alert('সংরক্ষণে সমস্যা: ' + err.message);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // AUTO DISCOUNT CALCULATION LOGIC
+    // -------------------------------------------------------------
+    function calculateDiscount(trigger) {
+      const oldPriceInput = document.getElementById('prod-oldprice');
+      const discountInput = document.getElementById('prod-discount');
+      const priceInput = document.getElementById('prod-price');
+      const helper = document.getElementById('price-calc-helper');
+
+      const oldPrice = parseFloat(oldPriceInput.value) || 0;
+      const discount = parseFloat(discountInput.value) || 0;
+      const price = parseFloat(priceInput.value) || 0;
+
+      if (trigger === 'discount' || trigger === 'oldprice') {
+        if (oldPrice > 0 && discount > 0) {
+          const calculatedPrice = Math.round(oldPrice * (1 - discount / 100));
+          priceInput.value = calculatedPrice;
+          if (helper) {
+            helper.innerHTML = `✅ ${discount}% ছাড়ে ${oldPrice} টাকার প্রোডাক্টের বিক্রয় মূল্য হবে <strong>৳${calculatedPrice}</strong> (সেভ ৳${oldPrice - calculatedPrice})`;
+          }
+        } else if (oldPrice > 0 && (!discountInput.value || discount === 0)) {
+          if (!priceInput.value || priceInput.value === '0') {
+            priceInput.value = oldPrice;
+          }
+        }
+      } else if (trigger === 'price') {
+        if (oldPrice > 0 && price > 0 && oldPrice > price) {
+          const calcDiscount = Math.round(((oldPrice - price) / oldPrice) * 100);
+          discountInput.value = calcDiscount;
+          if (helper) {
+            helper.innerHTML = `✅ ${oldPrice} টাকার প্রোডাক্ট ৳${price} এ বিক্রি করলে ছাড় হবে <strong>${calcDiscount}%</strong>`;
+          }
+        }
+      }
+    }
+
+    // -------------------------------------------------------------
+    // FIRESTORE REAL-TIME LISTENERS (EFFICIENT & LOW CREDIT)
+    // -------------------------------------------------------------
+    function initDataListeners() {
+      // 1. Orders
+      db.collection('orders').orderBy('createdAt', 'desc').onSnapshot((snap) => {
+        ordersList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderOrders();
+        updateOrderCounts();
+        updateDashboardStats();
+      });
+
+      // 2. Products
+      db.collection('products').onSnapshot((snap) => {
+        productsList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderProducts(productsList);
+        updateDashboardStats();
+      });
+
+      // 3. Categories
+      db.collection('categories').onSnapshot((snap) => {
+        categoriesList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderCategories();
+      });
+
+      // 4. Coupons
+      db.collection('coupons').onSnapshot((snap) => {
+        couponsList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderCoupons();
+      });
+
+      // 5. Reviews
+      db.collection('reviews').orderBy('createdAt', 'desc').onSnapshot((snap) => {
+        reviewsList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderReviews();
+      });
+
+      // 6. Site Content
+      db.collection('site_content').doc('main').onSnapshot((doc) => {
+        if (doc.exists) {
+          populateSiteContent(doc.data());
+        }
+      });
+
+      // Initialize API key input with current key
+      const keyInput = document.getElementById('input-imgbb-key');
+      if (keyInput) keyInput.value = imgbbApiKey;
+    }
+
+    // -------------------------------------------------------------
+    // DASHBOARD & HOME STATS (SENIOR-FRIENDLY METRICS)
+    // -------------------------------------------------------------
+    function updateDashboardStats() {
+      // 1. Total revenue
+      const nonCancelledOrders = ordersList.filter(o => o.status !== 'Cancelled');
+      const totalRevenue = nonCancelledOrders.reduce((sum, o) => sum + (Number(o.totalAmount || o.total) || 0), 0);
+
+      const elRev = document.getElementById('home-stat-revenue');
+      if (elRev) elRev.innerText = totalRevenue.toLocaleString('en-IN');
+
+      // 2. Total orders
+      const elTotalOrders = document.getElementById('home-stat-total-orders');
+      if (elTotalOrders) elTotalOrders.innerText = ordersList.length;
+
+      // 3. Pending orders
+      const pendingOrders = ordersList.filter(o => (o.status || 'Pending') === 'Pending').length;
+      const elPendingOrders = document.getElementById('home-stat-pending-orders');
+      if (elPendingOrders) elPendingOrders.innerText = pendingOrders;
+
+      // 4. Total products
+      const elProds = document.getElementById('home-stat-products');
+      if (elProds) elProds.innerText = productsList.length;
+
+      // Bottom nav badge
+      const bottomOrderBadge = document.getElementById('badge-bottom-orders');
+      if (bottomOrderBadge) {
+        if (pendingOrders > 0) {
+          bottomOrderBadge.innerText = pendingOrders;
+          bottomOrderBadge.classList.remove('hidden');
+        } else {
+          bottomOrderBadge.classList.add('hidden');
+        }
+      }
+
+      // Render recent orders on Home
+      renderHomeRecentOrders();
+    }
+
+    function renderHomeRecentOrders() {
+      const container = document.getElementById('home-recent-orders-container');
+      if (!container) return;
+
+      if (!ordersList || ordersList.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center text-gray-400 text-xs">
+            এখনও কোনো কাস্টমার অর্ডার নেই। কাস্টমার অর্ডার করলে সরাসরি এখানে আসবে।
+          </div>
+        `;
+        return;
+      }
+
+      const recentOrders = ordersList.slice(0, 5);
+      container.innerHTML = recentOrders.map(o => {
+        const phone = o.customerPhone || '';
+        const cleanPhone = phone.replace(/[^0-9]/g, '');
+        const waPhone = cleanPhone.startsWith('880') ? cleanPhone : (cleanPhone.startsWith('0') ? '88' + cleanPhone : cleanPhone);
+
+        let statusBg = 'bg-amber-100 text-amber-900 border-amber-300';
+        let statusText = '🟡 নতুন অর্ডার';
+        if (o.status === 'Processing') { statusBg = 'bg-blue-100 text-blue-900 border-blue-300'; statusText = '🔵 প্রসেসিং'; }
+        else if (o.status === 'Shipped') { statusBg = 'bg-purple-100 text-purple-900 border-purple-300'; statusText = '🟣 কুরিয়ারে'; }
+        else if (o.status === 'Delivered') { statusBg = 'bg-green-100 text-green-900 border-green-300'; statusText = '🟢 ডেলিভারি সম্পন্ন'; }
+        else if (o.status === 'Cancelled') { statusBg = 'bg-red-100 text-red-900 border-red-300'; statusText = '🔴 বাতিল'; }
+
+        const itemsCount = (o.items || []).length;
+        const firstItem = (o.items && o.items[0]) ? o.items[0].name : 'পণ্য';
+
+        return `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-[#FAF8F5] border border-[#ECE8E1] hover:border-[#C49A6C] transition-all gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-[#19231D] text-[#C49A6C] flex items-center justify-center font-bold text-sm shrink-0">
+                🛍️
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h4 class="font-bold text-sm text-[#19231D]">${o.customerName || 'কাস্টমার'}</h4>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${statusBg}">${statusText}</span>
+                  <span class="text-[11px] text-gray-400">#${(o.id || '').slice(-6)}</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-0.5">
+                  ${firstItem} ${itemsCount > 1 ? `(+ আরও ${itemsCount - 1} টি)` : ''} • <strong class="text-emerald-800 font-bold">৳${(o.totalAmount || o.total || 0).toLocaleString()}</strong>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              ${phone ? `
+                <a href="tel:${cleanPhone}" class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
+                  <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                  <span>কল দিন</span>
+                </a>
+                <a href="https://wa.me/${waPhone}" target="_blank" class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
+                  <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                  <span>হোয়াটসঅ্যাপ</span>
+                </a>
+              ` : ''}
+              <button onclick="inspectOrder('${o.id}')" class="px-3 py-2 rounded-xl bg-white border border-gray-300 text-gray-700 font-bold text-xs hover:bg-gray-100 shadow-xs">
+                রসিদ
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    // -------------------------------------------------------------
+    // ORDERS LOGIC (ELDERLY-FRIENDLY PHONE & WHATSAPP BUTTONS)
+    // -------------------------------------------------------------
+    function updateOrderCounts() {
+      const allCount = ordersList.length;
+      const pendingCount = ordersList.filter(o => (o.status || 'Pending') === 'Pending').length;
+      const deliveredCount = ordersList.filter(o => o.status === 'Delivered').length;
+
+      const elAll = document.getElementById('count-all-orders');
+      if (elAll) elAll.innerText = allCount;
+      const elPend = document.getElementById('count-pending-orders');
+      if (elPend) elPend.innerText = pendingCount;
+      const elDeliv = document.getElementById('count-delivered-orders');
+      if (elDeliv) elDeliv.innerText = deliveredCount;
+      const badge = document.getElementById('badge-orders-count');
+      if (badge) badge.innerText = pendingCount;
+    }
+
+    function filterOrders(status) {
+      currentOrderFilter = status;
+      document.querySelectorAll('.order-filter-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-offset-2', 'ring-[#19231D]');
+      });
+      const activeBtn = document.getElementById('btn-filter-' + status);
+      if (activeBtn) activeBtn.classList.add('ring-2', 'ring-offset-2', 'ring-[#19231D]');
+      renderOrders();
+    }
+
+    function renderOrders() {
+      const container = document.getElementById('orders-cards-container');
+      let filtered = ordersList;
+      if (currentOrderFilter !== 'all') {
+        filtered = ordersList.filter(o => (o.status || 'Pending') === currentOrderFilter);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="p-12 text-center bg-white rounded-3xl border border-gray-200 shadow-xs">
+            <i data-lucide="inbox" class="w-12 h-12 text-gray-300 mx-auto mb-3"></i>
+            <h4 class="text-lg font-bold text-gray-700">কোনো অর্ডার পাওয়া যায়নি</h4>
+            <p class="text-xs text-gray-500 mt-1">নতুন কোনো কাস্টমার অর্ডার করলে তা সরাসরি এখানে দেখা যাবে।</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = filtered.map(o => {
+        const phone = o.customerPhone || '';
+        const cleanPhone = phone.replace(/[^0-9]/g, '');
+        const waPhone = cleanPhone.startsWith('880') ? cleanPhone : (cleanPhone.startsWith('0') ? '88' + cleanPhone : cleanPhone);
+        
+        let statusBg = 'bg-amber-100 text-amber-900 border-amber-300';
+        let statusText = '🟡 নতুন অর্ডার (অপেক্ষমাণ)';
+        if (o.status === 'Processing') { statusBg = 'bg-blue-100 text-blue-900 border-blue-300'; statusText = '🔵 প্রসেসিং হচ্ছে'; }
+        else if (o.status === 'Shipped') { statusBg = 'bg-purple-100 text-purple-900 border-purple-300'; statusText = '🟣 কুরিয়ারে দেওয়া হয়েছে'; }
+        else if (o.status === 'Delivered') { statusBg = 'bg-green-100 text-green-900 border-green-300'; statusText = '🟢 ডেলিভারি সম্পন্ন'; }
+        else if (o.status === 'Cancelled') { statusBg = 'bg-red-100 text-red-900 border-red-300'; statusText = '🔴 বাতিল করা হয়েছে'; }
+
+        return `
+          <div class="bg-white border-2 border-[#E5E0D8] rounded-3xl p-5 sm:p-6 shadow-xs space-y-4 hover:border-[#C49A6C] transition-colors">
+            
+            <!-- Card Header: ID, Date & Status Dropdown -->
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-gray-100">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-sm sm:text-base font-black px-3 py-1 rounded-xl bg-[#19231D] text-white">#${o.id.slice(-6)}</span>
+                <span class="text-xs text-gray-500">${o.createdAt ? new Date(o.createdAt).toLocaleString('bn-BD') : ''}</span>
+              </div>
+
+              <!-- Status Dropdown -->
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-gray-600">স্ট্যাটাস:</span>
+                <select onchange="updateOrderStatus('${o.id}', this.value)" class="px-3.5 py-1.5 rounded-xl border text-xs sm:text-sm font-bold bg-white cursor-pointer shadow-xs focus:ring-2 focus:ring-[#19231D]">
+                  <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>🟡 অপেক্ষমাণ (Pending)</option>
+                  <option value="Processing" ${o.status === 'Processing' ? 'selected' : ''}>🔵 প্যাকেজিং হচ্ছে (Processing)</option>
+                  <option value="Shipped" ${o.status === 'Shipped' ? 'selected' : ''}>🟣 কুরিয়ারে পাঠানো হয়েছে (Shipped)</option>
+                  <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>🟢 ডেলিভারি সম্পন্ন (Delivered)</option>
+                  <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>🔴 বাতিল (Cancelled)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Customer & Delivery Info -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#FAF8F5] p-4 rounded-2xl border border-[#ECE8E1]">
+              <!-- Customer Info -->
+              <div class="space-y-1">
+                <span class="text-[11px] font-bold text-[#8B5E34] uppercase tracking-wider block">গ্রাহকের নাম ও ফোন</span>
+                <h4 class="text-base font-bold text-gray-900">${o.customerName || 'সম্মানিত ক্রেতা'}</h4>
+                <p class="text-sm font-bold text-gray-800">${phone || 'ফোন নাম্বার নেই'}</p>
+
+                ${phone ? `
+                  <div class="flex items-center gap-2 pt-2">
+                    <a href="tel:${phone}" class="px-3 py-1.5 rounded-xl bg-[#19231D] text-white text-xs font-bold flex items-center gap-1.5 hover:bg-[#28382E] shadow-xs">
+                      <i data-lucide="phone" class="w-3.5 h-3.5 text-[#86EFAC]"></i>
+                      <span>কল দিন</span>
+                    </a>
+                    <a href="https://wa.me/${waPhone}" target="_blank" class="px-3 py-1.5 rounded-xl bg-[#25D366] text-white text-xs font-bold flex items-center gap-1.5 hover:bg-[#1EBE5D] shadow-xs">
+                      <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                      <span>হোয়াটসঅ্যাপ</span>
+                    </a>
+                  </div>
+                ` : ''}
+              </div>
+
+              <!-- Address -->
+              <div class="space-y-1">
+                <span class="text-[11px] font-bold text-[#8B5E34] uppercase tracking-wider block">ডেলিভারি ঠিকানা</span>
+                <p class="text-sm text-gray-800 leading-relaxed font-medium">${o.address || 'ঠিকানা দেওয়া হয়নি'}</p>
+                <p class="text-xs text-gray-500">${o.city || 'ঢাকা'} ${o.postalCode ? '- ' + o.postalCode : ''}</p>
+                <span class="inline-block mt-1 px-2.5 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[11px] font-bold">পেমেন্ট: ${o.paymentMethod || 'ক্যাশ অন ডেলিভারি (COD)'}</span>
+              </div>
+
+              <!-- Order Summary -->
+              <div class="space-y-1 text-right flex flex-col justify-between">
+                <div>
+                  <span class="text-[11px] font-bold text-[#8B5E34] uppercase tracking-wider block">মোট টাকা</span>
+                  <div class="text-2xl font-black text-[#19231D]">৳ ${(o.total || 0).toLocaleString()}</div>
+                  <span class="text-xs text-gray-500">মোট পণ্য: ${(o.items || []).length} টি</span>
+                </div>
+                <div>
+                  <button onclick="inspectOrder('${o.id}')" class="px-4 py-2 rounded-xl bg-white hover:bg-gray-100 border text-xs font-bold text-gray-800 shadow-xs">
+                    বিস্তারিত ইনভয়েস দেখুন &rarr;
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ordered Items Preview -->
+            <div class="pt-1">
+              <span class="text-xs font-bold text-gray-700 block mb-2">অর্ডারকৃত পণ্যসমূহ:</span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                ${(o.items || []).map(item => `
+                  <div class="flex items-center gap-3 p-2.5 rounded-xl border border-gray-100 bg-white">
+                    <img src="${item.image || 'https://via.placeholder.com/80'}" class="w-12 h-12 rounded-lg object-cover bg-gray-100 border shrink-0" />
+                    <div class="min-w-0 flex-1">
+                      <h5 class="text-xs font-bold text-gray-800 truncate">${item.name}</h5>
+                      <p class="text-[11px] text-gray-500">কালার: ${item.color || 'Standard'} | পরিমাণ: <span class="font-bold text-gray-800">${item.quantity}</span> টি</p>
+                      <p class="text-xs font-bold text-[#19231D]">৳ ${(item.price * item.quantity).toLocaleString()}</p>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    async function updateOrderStatus(orderId, newStatus) {
+      try {
+        await db.collection('orders').doc(orderId).update({
+          status: newStatus,
+          updatedAt: new Date().toISOString()
+        });
+      } catch (err) {
+        alert('স্ট্যাটাস আপডেট করা সম্ভব হয়নি: ' + err.message);
+      }
+    }
+
+    function inspectOrder(orderId) {
+      const order = ordersList.find(o => o.id === orderId);
+      if (!order) return;
+      document.getElementById('modal-order-id').innerText = '#' + order.id;
+      const c = document.getElementById('order-modal-content');
+      c.innerHTML = `
+        <div class="p-4 bg-[#FAF8F5] rounded-2xl border space-y-2">
+          <div class="flex justify-between">
+            <span class="font-bold text-gray-800">গ্রাহকের নাম:</span>
+            <span>${order.customerName}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-bold text-gray-800">মোবাইল:</span>
+            <span>${order.customerPhone}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-bold text-gray-800">ঠিকানা:</span>
+            <span>${order.address}, ${order.city}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-bold text-gray-800">পেমেন্ট মেথড:</span>
+            <span class="font-bold text-green-800">${order.paymentMethod}</span>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <span class="font-bold block text-gray-700">অর্ডার আইটেম:</span>
+          ${(order.items || []).map(i => `
+            <div class="flex items-center justify-between p-2 rounded-xl border">
+              <div class="flex items-center gap-2">
+                <img src="${i.image}" class="w-10 h-10 rounded-lg object-cover" />
+                <div>
+                  <h6 class="font-bold text-xs">${i.name}</h6>
+                  <span class="text-[11px] text-gray-500">x${i.quantity} (${i.color})</span>
+                </div>
+              </div>
+              <span class="font-bold text-sm">৳${(i.price * i.quantity).toLocaleString()}</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="pt-3 border-t space-y-1 text-right text-xs">
+          <p>সাবটোটাল: ৳${(order.subtotal || 0).toLocaleString()}</p>
+          <p>ডেলিভারি চার্জ: ৳${(order.shippingFee || 0).toLocaleString()}</p>
+          ${order.discount ? `<p class="text-green-700 font-bold">ডিসকাউন্ট: -৳${order.discount.toLocaleString()}</p>` : ''}
+          <div class="text-lg font-black text-[#19231D] pt-1">সর্বমোট: ৳${(order.total || 0).toLocaleString()}</div>
+        </div>
+      `;
+      document.getElementById('order-modal').classList.remove('hidden');
+      document.getElementById('order-modal').classList.add('flex');
+    }
+
+    function closeOrderModal() {
+      document.getElementById('order-modal').classList.add('hidden');
+      document.getElementById('order-modal').classList.remove('flex');
+    }
+
+    // -------------------------------------------------------------
+    // PRODUCTS LOGIC
+    // -------------------------------------------------------------
+    function handleProductSearch() {
+      const q = document.getElementById('product-search-input').value.toLowerCase().trim();
+      if (!q) {
+        renderProducts(productsList);
+      } else {
+        const filtered = productsList.filter(p => (p.name || '').toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q));
+        renderProducts(filtered);
+      }
+    }
+
+    function renderProducts(list) {
+      const container = document.getElementById('products-grid-container');
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full p-12 text-center bg-white rounded-3xl border border-gray-200">
+            <h4 class="text-lg font-bold text-gray-700">কোনো প্রোডাক্ট পাওয়া যায়নি</h4>
+            <p class="text-xs text-gray-500 mt-1">নতুন প্রোডাক্ট যোগ করতে উপরের "+ নতুন প্রোডাক্ট যোগ করুন" বাটনে ক্লিক করুন।</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(p => {
+        const img = (p.images && p.images[0]) || 'https://via.placeholder.com/200';
+        const isLive = p.published !== false;
+
+        return `
+          <div class="bg-white border-2 border-[#E5E0D8] rounded-3xl p-4 shadow-xs flex flex-col justify-between space-y-3 hover:border-[#C49A6C] transition-all">
+            <div class="space-y-3">
+              <div class="relative w-full h-48 rounded-2xl overflow-hidden bg-[#FAF8F5] border">
+                <img src="${img}" alt="${p.name}" class="w-full h-full object-cover" />
+                <span class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#19231D]/80 text-white backdrop-blur-xs uppercase">
+                  ${p.category || 'Leather'}
+                </span>
+                ${p.featured ? '<span class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-400 text-[#19231D] shadow-xs">ফিচারড</span>' : ''}
+              </div>
+
+              <div>
+                <h4 class="font-bold text-base text-gray-900 line-clamp-2">${p.name}</h4>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-lg font-black text-[#19231D]">৳ ${(p.price || 0).toLocaleString()}</span>
+                  ${p.oldPrice ? `<span class="text-xs text-gray-400 line-through">৳ ${p.oldPrice.toLocaleString()}</span>` : ''}
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
+              <button onclick="toggleProductPublish('${p.id}', ${isLive})" class="px-3 py-1.5 rounded-xl text-xs font-bold ${isLive ? 'bg-green-100 text-green-900' : 'bg-gray-200 text-gray-600'}">
+                ${isLive ? '🟢 দোকানে চালু' : '⚪ বন্ধ'}
+              </button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="editProduct('${p.id}')" class="px-3 py-1.5 rounded-xl bg-[#FAF8F5] hover:bg-gray-100 border text-xs font-bold text-gray-800">
+                  ✏️ এডিট
+                </button>
+                <button onclick="deleteProduct('${p.id}')" class="px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-xs font-bold text-red-700">
+                  🗑️ ডিলিট
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function openProductModal(prod = null) {
+      document.getElementById('product-modal-title').innerText = prod ? 'প্রোডাক্ট এডিট করুন' : 'নতুন প্রোডাক্ট যোগ করুন';
+      document.getElementById('prod-id').value = prod ? prod.id : '';
+      document.getElementById('prod-name').value = prod ? prod.name : '';
+      document.getElementById('prod-category').value = prod ? prod.category : 'wallets';
+      document.getElementById('prod-price').value = prod ? prod.price : '';
+      document.getElementById('prod-oldprice').value = prod && prod.oldPrice ? prod.oldPrice : '';
+      document.getElementById('prod-discount').value = prod && prod.discount ? prod.discount : '';
+      document.getElementById('prod-stock').value = prod ? prod.stock || 25 : 25;
+      document.getElementById('prod-colors').value = prod && prod.colors ? prod.colors.join(', ') : 'Brown, Black';
+      document.getElementById('prod-description').value = prod ? prod.description : '';
+      document.getElementById('prod-images').value = prod && prod.images ? prod.images.join('\n') : '';
+      document.getElementById('prod-featured').checked = prod ? !!prod.featured : false;
+      document.getElementById('prod-published').checked = prod ? prod.published !== false : true;
+
+      // Preview first image if exists
+      const firstImg = prod && prod.images && prod.images[0];
+      const previewImg = document.getElementById('preview-prod-main-img');
+      const previewIcon = document.getElementById('preview-prod-main-icon');
+      if (firstImg) {
+        previewImg.src = firstImg;
+        previewImg.classList.remove('hidden');
+        if (previewIcon) previewIcon.classList.add('hidden');
+      } else {
+        previewImg.src = '';
+        previewImg.classList.add('hidden');
+        if (previewIcon) previewIcon.classList.remove('hidden');
+      }
+      document.getElementById('status-prod-main-upload').innerText = '';
+
+      document.getElementById('product-modal').classList.remove('hidden');
+      document.getElementById('product-modal').classList.add('flex');
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-modal').classList.add('hidden');
+      document.getElementById('product-modal').classList.remove('flex');
+    }
+
+    function editProduct(id) {
+      const p = productsList.find(x => x.id === id);
+      if (p) openProductModal(p);
+    }
+
+    async function toggleProductPublish(id, current) {
+      await db.collection('products').doc(id).update({
+        published: !current
+      });
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('আপনি কি নিশ্চিত যে এই প্রোডাক্টটি স্থায়ীভাবে মুছে ফেলতে চান?')) return;
+      await db.collection('products').doc(id).delete();
+    }
+
+    async function saveProduct(e) {
+      e.preventDefault();
+      const id = document.getElementById('prod-id').value;
+      const imagesRaw = document.getElementById('prod-images').value.split('\n').map(s => s.trim()).filter(Boolean);
+      const colorsRaw = document.getElementById('prod-colors').value.split(',').map(s => s.trim()).filter(Boolean);
+
+      const data = {
+        name: document.getElementById('prod-name').value.trim(),
+        category: document.getElementById('prod-category').value,
+        price: Number(document.getElementById('prod-price').value),
+        oldPrice: Number(document.getElementById('prod-oldprice').value) || null,
+        discount: Number(document.getElementById('prod-discount').value) || null,
+        stock: Number(document.getElementById('prod-stock').value) || 25,
+        colors: colorsRaw.length > 0 ? colorsRaw : ['Standard'],
+        description: document.getElementById('prod-description').value.trim(),
+        images: imagesRaw.length > 0 ? imagesRaw : ['https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=600&q=80'],
+        featured: document.getElementById('prod-featured').checked,
+        published: document.getElementById('prod-published').checked,
+        updatedAt: new Date().toISOString()
+      };
+
+      try {
+        if (id) {
+          await db.collection('products').doc(id).update(data);
+        } else {
+          data.rating = 4.9;
+          data.reviewsCount = 42;
+          data.createdAt = new Date().toISOString();
+          await db.collection('products').add(data);
+        }
+        closeProductModal();
+        alert('প্রোডাক্ট সফলভাবে সংরক্ষণ করা হয়েছে!');
+      } catch (err) {
+        alert('ত্রুটি হয়েছে: ' + err.message);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // CATEGORIES LOGIC
+    // -------------------------------------------------------------
+    function renderCategories() {
+      const container = document.getElementById('categories-grid-container');
+      container.innerHTML = categoriesList.map(c => `
+        <div class="bg-white border-2 border-[#E5E0D8] rounded-2xl p-4 flex items-center justify-between shadow-xs">
+          <div class="flex items-center gap-3">
+            <img src="${c.image || 'https://via.placeholder.com/80'}" class="w-14 h-14 rounded-xl object-cover bg-gray-100 border shrink-0" />
+            <div>
+              <h4 class="font-bold text-sm text-gray-900">${c.name}</h4>
+              <p class="text-xs text-gray-500 font-mono">${c.slug}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="editCategory('${c.id}')" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+            <button onclick="deleteCategory('${c.id}')" class="p-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function openCategoryModal(cat = null) {
+      document.getElementById('cat-modal-title').innerText = cat ? 'ক্যাটাগরি এডিট' : 'নতুন ক্যাটাগরি';
+      document.getElementById('cat-id').value = cat ? cat.id : '';
+      document.getElementById('cat-name').value = cat ? cat.name : '';
+      document.getElementById('cat-slug').value = cat ? cat.slug : '';
+      document.getElementById('cat-image').value = cat ? cat.image || '' : '';
+      document.getElementById('cat-desc').value = cat ? cat.description || '' : '';
+
+      const imgEl = document.getElementById('preview-cat-img');
+      if (cat && cat.image) {
+        imgEl.src = cat.image;
+        imgEl.classList.remove('hidden');
+      } else {
+        imgEl.src = '';
+        imgEl.classList.add('hidden');
+      }
+
+      document.getElementById('category-modal').classList.remove('hidden');
+      document.getElementById('category-modal').classList.add('flex');
+    }
+
+    function closeCategoryModal() {
+      document.getElementById('category-modal').classList.add('hidden');
+      document.getElementById('category-modal').classList.remove('flex');
+    }
+
+    function editCategory(id) {
+      const c = categoriesList.find(x => x.id === id);
+      if (c) openCategoryModal(c);
+    }
+
+    async function deleteCategory(id) {
+      if (!confirm('এই ক্যাটাগরি ডিলিট করবেন?')) return;
+      await db.collection('categories').doc(id).delete();
+    }
+
+    async function saveCategory(e) {
+      e.preventDefault();
+      const id = document.getElementById('cat-id').value;
+      const data = {
+        name: document.getElementById('cat-name').value.trim(),
+        slug: document.getElementById('cat-slug').value.toLowerCase().trim(),
+        image: document.getElementById('cat-image').value.trim(),
+        description: document.getElementById('cat-desc').value.trim(),
+        published: true
+      };
+      if (id) {
+        await db.collection('categories').doc(id).update(data);
+      } else {
+        await db.collection('categories').add(data);
+      }
+      closeCategoryModal();
+    }
+
+    // -------------------------------------------------------------
+    // COUPONS LOGIC
+    // -------------------------------------------------------------
+    function renderCoupons() {
+      const tbody = document.getElementById('coupons-table-body');
+      if (couponsList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-400">কোনো কুপন কোড নেই।</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = couponsList.map(c => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-3.5 font-mono font-bold text-gray-900">${c.code}</td>
+          <td class="p-3.5 uppercase text-xs font-semibold">${c.discountType}</td>
+          <td class="p-3.5 font-black text-gray-900">${c.discountType === 'percentage' ? c.discountValue + '%' : '৳' + c.discountValue}</td>
+          <td class="p-3.5">৳${(c.minOrder || 0).toLocaleString()}</td>
+          <td class="p-3.5"><span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">সক্রিয়</span></td>
+          <td class="p-3.5 text-right">
+            <button onclick="deleteCoupon('${c.id}')" class="px-3 py-1 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 font-bold text-xs">ডিলিট</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openCouponModal() {
+      document.getElementById('coupon-modal').classList.remove('hidden');
+      document.getElementById('coupon-modal').classList.add('flex');
+    }
+
+    function closeCouponModal() {
+      document.getElementById('coupon-modal').classList.add('hidden');
+      document.getElementById('coupon-modal').classList.remove('flex');
+    }
+
+    async function deleteCoupon(id) {
+      if (!confirm('এই কুপন মুছে ফেলতে চান?')) return;
+      await db.collection('coupons').doc(id).delete();
+    }
+
+    async function saveCoupon(e) {
+      e.preventDefault();
+      const code = document.getElementById('coup-code').value.toUpperCase().trim();
+      const type = document.getElementById('coup-type').value;
+      const val = Number(document.getElementById('coup-value').value);
+      const min = Number(document.getElementById('coup-min').value);
+
+      await db.collection('coupons').doc(code).set({
+        code,
+        discountType: type,
+        discountValue: val,
+        minOrder: min,
+        active: true,
+        createdAt: new Date().toISOString()
+      });
+      closeCouponModal();
+    }
+
+    // -------------------------------------------------------------
+    // REVIEWS LOGIC
+    // -------------------------------------------------------------
+    function renderReviews() {
+      const container = document.getElementById('reviews-list-container');
+      if (reviewsList.length === 0) {
+        container.innerHTML = `<div class="p-8 bg-white border rounded-2xl text-center text-gray-400 text-xs">কোনো রিভিউ এখনো জমা পড়েনি।</div>`;
+        return;
+      }
+      container.innerHTML = reviewsList.map(r => `
+        <div class="p-4 bg-white border-2 border-[#E5E0D8] rounded-2xl flex items-start justify-between shadow-xs">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sm text-gray-900">${r.userName || 'ক্রেতা'}</span>
+              <span class="text-amber-500 font-bold text-xs">★ ${r.rating}/5</span>
+            </div>
+            <p class="text-xs text-gray-600 mt-1">${r.comment}</p>
+            <span class="text-[10px] text-gray-400 mt-1 block">${new Date(r.createdAt).toLocaleDateString()}</span>
+          </div>
+          <button onclick="deleteReview('${r.id}')" class="px-3 py-1 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-100">ডিলিট</button>
+        </div>
+      `).join('');
+    }
+
+    async function deleteReview(id) {
+      if (!confirm('এই রিভিউ মুছে ফেলতে চান?')) return;
+      await db.collection('reviews').doc(id).delete();
+    }
+
+    // -------------------------------------------------------------
+    // SITE CONTENT & SOCIAL LINKS (POPULATE & SAVE)
+    // -------------------------------------------------------------
+    function populateSiteContent(data) {
+      if (data.imgbbApiKey) {
+        imgbbApiKey = data.imgbbApiKey;
+        localStorage.setItem('sr_leather_imgbb_key', data.imgbbApiKey);
+        const keyInput = document.getElementById('input-imgbb-key');
+        if (keyInput) keyInput.value = data.imgbbApiKey;
+        const badge = document.getElementById('imgbb-status-badge');
+        if (badge) {
+          badge.innerText = '🟢 বর্তমান কি সক্রিয় (' + data.imgbbApiKey.slice(0, 6) + '...)';
+        }
+      }
+
+      if (data.footer) {
+        const quickAddr = document.getElementById('quick-address');
+        if (quickAddr) quickAddr.value = data.footer.address || '';
+        const quickWa = document.getElementById('quick-whatsapp');
+        if (quickWa) quickWa.value = data.footer.whatsappNumber || '';
+      }
+
+      if (data.announcementBar) {
+        document.getElementById('sc-announcement-enabled').checked = !!data.announcementBar.enabled;
+        document.getElementById('sc-announcement-text').value = data.announcementBar.text || '';
+      }
+      if (data.hero) {
+        document.getElementById('sc-hero-badge').value = data.hero.badge || 'New Season 2025';
+        document.getElementById('sc-hero-title').value = data.hero.title || '';
+        document.getElementById('sc-hero-subtitle').value = data.hero.subtitle || '';
+        document.getElementById('sc-hero-button-text').value = data.hero.buttonText || '';
+        document.getElementById('sc-hero-image-url').value = data.hero.imageUrl || '';
+        if (data.hero.imageUrl) {
+          const img = document.getElementById('preview-hero-img');
+          img.src = data.hero.imageUrl;
+          img.classList.remove('hidden');
+          const ph = document.getElementById('preview-hero-placeholder');
+          if (ph) ph.classList.add('hidden');
+        }
+      }
+      if (data.craftsmanshipBanner) {
+        document.getElementById('sc-craft-tag').value = data.craftsmanshipBanner.tag || '';
+        document.getElementById('sc-craft-title').value = data.craftsmanshipBanner.title || '';
+        document.getElementById('sc-craft-description').value = data.craftsmanshipBanner.description || '';
+        document.getElementById('sc-craft-button-text').value = data.craftsmanshipBanner.buttonText || '';
+        document.getElementById('sc-craft-image-url').value = data.craftsmanshipBanner.imageUrl || '';
+        if (data.craftsmanshipBanner.imageUrl) {
+          const img = document.getElementById('preview-craft-img');
+          img.src = data.craftsmanshipBanner.imageUrl;
+          img.classList.remove('hidden');
+          const ph = document.getElementById('preview-craft-placeholder');
+          if (ph) ph.classList.add('hidden');
+        }
+      }
+      if (data.footer) {
+        document.getElementById('sc-contact-phone').value = data.footer.phone || '';
+        document.getElementById('sc-contact-email').value = data.footer.email || '';
+        document.getElementById('sc-contact-address').value = data.footer.address || '';
+        document.getElementById('sc-contact-tagline').value = data.footer.tagline || '';
+        document.getElementById('sc-social-facebook').value = data.footer.facebookUrl || '';
+        document.getElementById('sc-social-youtube').value = data.footer.youtubeUrl || '';
+        document.getElementById('sc-social-instagram').value = data.footer.instagramUrl || '';
+        document.getElementById('sc-social-whatsapp').value = data.footer.whatsappNumber || '';
+      }
+      if (data.aboutUs) {
+        document.getElementById('sc-about-title').value = data.aboutUs.title || '';
+        document.getElementById('sc-about-badge').value = data.aboutUs.badge || '';
+        document.getElementById('sc-about-subtitle').value = data.aboutUs.subtitle || '';
+        document.getElementById('sc-about-p1').value = data.aboutUs.paragraph1 || '';
+        document.getElementById('sc-about-p2').value = data.aboutUs.paragraph2 || '';
+        document.getElementById('sc-about-banner-image').value = data.aboutUs.bannerImageUrl || '';
+        if (data.aboutUs.bannerImageUrl) {
+          const img = document.getElementById('preview-about-img');
+          img.src = data.aboutUs.bannerImageUrl;
+          img.classList.remove('hidden');
+          const ph = document.getElementById('preview-about-placeholder');
+          if (ph) ph.classList.add('hidden');
+        }
+      }
+    }
+
+    async function saveAllSiteContent() {
+      const data = {
+        announcementBar: {
+          enabled: document.getElementById('sc-announcement-enabled').checked,
+          text: document.getElementById('sc-announcement-text').value.trim()
+        },
+        hero: {
+          badge: document.getElementById('sc-hero-badge').value.trim() || 'New Season 2025',
+          title: document.getElementById('sc-hero-title').value.trim(),
+          subtitle: document.getElementById('sc-hero-subtitle').value.trim(),
+          buttonText: document.getElementById('sc-hero-button-text').value.trim() || 'Explore Collection',
+          imageUrl: document.getElementById('sc-hero-image-url').value.trim()
+        },
+        craftsmanshipBanner: {
+          tag: document.getElementById('sc-craft-tag').value.trim() || '100% Genuine Cowhide',
+          title: document.getElementById('sc-craft-title').value.trim() || 'Crafted for Generations, Not Just Seasons',
+          description: document.getElementById('sc-craft-description').value.trim(),
+          imageUrl: document.getElementById('sc-craft-image-url').value.trim(),
+          buttonText: document.getElementById('sc-craft-button-text').value.trim() || 'Explore Our Workshop'
+        },
+        aboutUs: {
+          title: document.getElementById('sc-about-title').value.trim() || 'The Art of Pure Full-Grain Leather',
+          badge: document.getElementById('sc-about-badge').value.trim() || 'Est. 2021 — Handcrafted in Bangladesh',
+          subtitle: document.getElementById('sc-about-subtitle').value.trim() || 'Sculpted for those who value heritage, unyielding durability, and personal patina.',
+          paragraph1: document.getElementById('sc-about-p1').value.trim(),
+          paragraph2: document.getElementById('sc-about-p2').value.trim(),
+          bannerImageUrl: document.getElementById('sc-about-banner-image').value.trim()
+        },
+        footer: {
+          phone: document.getElementById('sc-contact-phone').value.trim(),
+          email: document.getElementById('sc-contact-email').value.trim(),
+          address: document.getElementById('sc-contact-address').value.trim(),
+          tagline: document.getElementById('sc-contact-tagline').value.trim(),
+          aboutText: document.getElementById('sc-about-p1').value.trim() || 'SR Leather is a premier handcrafted leather atelier based in Dhaka.',
+          facebookUrl: document.getElementById('sc-social-facebook').value.trim(),
+          youtubeUrl: document.getElementById('sc-social-youtube').value.trim(),
+          instagramUrl: document.getElementById('sc-social-instagram').value.trim(),
+          whatsappNumber: document.getElementById('sc-social-whatsapp').value.trim()
+        },
+        updatedAt: new Date().toISOString()
+      };
+
+      try {
+        await Promise.all([
+          db.collection('site_content').doc('main').set(data, { merge: true }),
+          db.collection('siteContent').doc('main').set(data, { merge: true })
+        ]);
+        alert('✅ সমস্ত ব্যানার, সোশ্যাল লিংক এবং সাইট তথ্য সফলভাবে সেভ হয়েছে!');
+      } catch (err) {
+        alert('ত্রুটি: ' + err.message);
+      }
+    }
+
+    // Start everything on DOM ready
+    window.addEventListener('DOMContentLoaded', () => {
+      initDataListeners();
+      lucide.createIcons();
+    });
+
+    initDataListeners();
+    setTimeout(() => { lucide.createIcons(); }, 150);
+  </script>
+</body>
+</html>

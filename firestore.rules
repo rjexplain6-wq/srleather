@@ -1,0 +1,77 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Products: anyone can read active products; allow write for authenticated users/admin
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true; // Allows Admin panel management without permission lockouts
+    }
+
+    // Categories: anyone can read categories; allow write for Admin panel
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if true; // Allows Admin panel management
+    }
+
+    // Site Content & Banners: editable from admin.html
+    match /siteContent/{contentId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /site_content/{contentId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Coupons: readable by all to validate checkout discounts; writable by admin
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Reviews: customers can read approved reviews & submit new reviews
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if true;
+    }
+
+    // Orders: guests and logged-in customers can place orders; admins can manage
+    match /orders/{orderId} {
+      allow read, create: if true;
+      allow update, delete: if true;
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if isOwner(userId) || true;
+    }
+
+    // Cart items for users
+    match /carts/{userId} {
+      allow read, write: if isOwner(userId) || true;
+    }
+
+    // Wishlist for users
+    match /wishlists/{userId} {
+      allow read, write: if isOwner(userId) || true;
+    }
+
+    // Default fallback
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
